@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_buscaLoc"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Busca por Localização" />
+        <item
+            android:id="@+id/nav_buscaEspec"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Busca por Especialidade" />
+        <item
+            android:id="@+id/nav_buscaNome"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Busca por nome da unidade"/>
+
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_sair"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Sair" />
+        </menu>
+    </item>
+
+</menu>

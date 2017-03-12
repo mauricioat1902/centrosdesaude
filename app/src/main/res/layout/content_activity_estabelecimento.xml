@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_activity_estabelecimento"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento"
+    tools:showIn="@layout/app_bar_activity_estabelecimento"
+    android:weightSum="1">
+
+    <TextView
+        android:text="Nome do Estabelecimento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvNomeEstabelecimento"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:text="Endereço"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvEndereco" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:text="Telefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvTelefone" />
+
+                <TextView
+                    android:text="Tipo do Estabelecimento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvTpEstabelecimento" />
+
+                <TextView
+                    android:text="Atendimento Urgência"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvAtendUrgencia" />
+
+                <TextView
+                    android:text="Atendimento Ambulatorial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvAtendAmbulatorial" />
+
+                <TextView
+                    android:text="Centro Cirúrgico"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvCentroCirurgico" />
+
+                <TextView
+                    android:text="Obstetra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvObstetra" />
+
+                <TextView
+                    android:text="NeoNatal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvNeoNatal" />
+
+                <TextView
+                    android:text="Dialise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvDialise" />
+
+                <TextView
+                    android:text="Turno Atendimento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvturnoAtendimento" />
+            </LinearLayout>
+
+            <TextView
+                android:text="Avaliação da Unidade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="2"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="Atendimento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvAtendimento"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbAtendimento"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+
+                <TextView
+                    android:text="Estrutura"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEstrutura"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbEstrutura"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+
+                <TextView
+                    android:text="Equipamentos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEquipamentos"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbEquipamentos"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+                <TextView
+                    android:text="Localização"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvLocalização"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbLocalização"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+                <TextView
+                    android:text="Tempo de Atendimento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvTempoAtendimento"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbTempoAtendimento"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+
+            </GridLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#696969"></LinearLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/etComentario"
+                android:hint="Escreva seu comentário aqui..."
+                android:layout_weight="0.19"
+                android:gravity="top"
+                android:layout_height="120dp"
+                android:background="@drawable/modelo_edit"/>
+
+            <Button
+                android:text="Enviar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnEnviarComentario" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/lvComentarios"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/llLinhaComent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:columnCount="2">
+
+            <TextView
+                android:text="Nome do Usuário"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvNomeUsuario"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:text="Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvData"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:textAppearance="@style/TextAppearance.CastMiniController.Subtitle" />
+        </GridLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rbAvGeral"
+                style="?android:attr/ratingBarStyleSmall"/>
+
+            <TextView
+                android:text="Comentário do Usuário"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvComentario"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#696969"></LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="2"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="Atendimento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvAtendimento"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbAtendimentoCom"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+
+                <TextView
+                    android:text="Estrutura"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEstrutura"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbEstruturaCom"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+
+                <TextView
+                    android:text="Equipamentos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEquipamentos"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbEquipamentosCom"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+                <TextView
+                    android:text="Localização"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvLocalização"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbLocalizaçãoCom"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+                <TextView
+                    android:text="Tempo de Atendimento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvTempoAtendimento"
+                    android:layout_gravity="center_vertical" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbTempoAtendimento"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    style="?android:attr/ratingBarStyleSmall"/>
+
+            </GridLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

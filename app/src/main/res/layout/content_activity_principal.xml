@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_activity_principal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.mauricioecamila.centrosdesaude.Activities.ActivityPrincipal"
+    tools:showIn="@layout/app_bar_activity_principal"
+    android:background="@drawable/fundo"
+    android:gravity="center">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/container">
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="126dp"
+            android:layout_weight="1"
+            android:background="@drawable/botao_estabelecimentos"
+            android:id="@+id/botaoProcurarEstabelecimento" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"></LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:background="@drawable/botao_especialidades"
+            android:clickable="true"
+            android:id="@+id/botaoEspecialidades"/>
+        <LinearLayout
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"></LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:background="@drawable/botaofarmacias"/>
+    </LinearLayout>
+
+</LinearLayout>
