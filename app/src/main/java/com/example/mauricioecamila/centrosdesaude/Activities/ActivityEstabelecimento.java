@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,12 +28,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Avaliacao;
+import com.example.mauricioecamila.centrosdesaude.AvaliacaoAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -82,7 +85,6 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_viewEstabelecimento);
         navigationView.setNavigationItemSelectedListener(this);
-
         //Pegando os parametros passado para essa Activity
         Intent intent = getIntent();
         Bundle params = intent.getExtras();
@@ -109,7 +111,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
             latitude = params.getString("latitude");
             longitude = params.getString("longitude");
             distancia = params.getDouble("distancia");
-            mediadAtendimento = params.getDouble("mediadAtendimento");
+            mediadAtendimento = params.getDouble("mediaAtendimento");
             mediaEstrutura = params.getDouble("mediaEstrutura");
             mediaEquipamentos = params.getDouble("mediaEquipamentos");
             mediaLocalizacao = params.getDouble("mediaLocalizacao");
@@ -142,22 +144,19 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         tvturnoAtendimento.setText("Turno de Atendimento: " + turnoAtendimento);
 
         rbAtendimento = (RatingBar)findViewById(R.id.rbAtendimento);
-        rbAtendimento.setRating(Float.parseFloat(String.format("%.1f",mediadAtendimento)));
+        rbAtendimento.setRating(Float.parseFloat(mediadAtendimento.toString()));
 
         rbEstrutura = (RatingBar)findViewById(R.id.rbEstrutura);
-        rbEstrutura.setRating(Float.parseFloat(String.format("%.1f",mediaEstrutura)));
+        rbEstrutura.setRating(Float.parseFloat(mediaEstrutura.toString()));
 
         rbEquipamentos = (RatingBar)findViewById(R.id.rbEquipamentos);
-        rbEquipamentos.setRating(Float.parseFloat(String.format("%.1f",mediaEquipamentos)));
+        rbEquipamentos.setRating(Float.parseFloat(mediaEquipamentos.toString()));
 
         rbLocalização = (RatingBar)findViewById(R.id.rbLocalização);
-        rbLocalização.setRating(Float.parseFloat(String.format("%.1f",mediaLocalizacao)));
+        rbLocalização.setRating(Float.parseFloat(mediaLocalizacao.toString()));
 
         rbTempoAtendimento = (RatingBar)findViewById(R.id.rbTempoAtendimento);
-        rbTempoAtendimento.setRating(Float.parseFloat(String.format("%.1f",mediaTempoAtendimento)));
-
-
-        Date data = new Date(System.currentTimeMillis());
+        rbTempoAtendimento.setRating(Float.parseFloat(mediaTempoAtendimento.toString()));
 
         btnEnviarComentario = (Button)findViewById(R.id.btnEnviarComentario);
         btnEnviarComentario.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +185,6 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 //Fim da busca
             }
         });
-
         //Preencher o listview com os comentários da unidade
         //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -194,10 +192,8 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         if(networkInfo != null && networkInfo.isConnected()){
             //Criar a URL
             url = "http://centrosdesaude.com.br/retornoComentarios.php";
-            parametros = "?idUnidade=" + idEstabelecimento;
-
+            parametros2 = "?idUnidade=" + idEstabelecimento;
             new ActivityEstabelecimento.CarregaComentarios().execute(url);
-
         }
         else{
             Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
@@ -263,6 +259,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                this.finish();
                 Intent startActivityLogin = new Intent(this, ActivityLogin.class);
                 startActivity(startActivityLogin);
         }
@@ -277,13 +274,14 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         protected String doInBackground(String... urls) {
             return Conexao.postDados(urls[0],parametros2);
         }
-
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String resultado) {
             if (!resultado.isEmpty()) {
                 if (resultado.contains("Não houve retorno na busca")) {
-
+                    System.out.println("Não houve retorno na busca de comentários");
+                    TextView tvSemRetorno = (TextView)findViewById(R.id.tvSemRetorno);
+                    tvSemRetorno.setText("Não há comentários desse Estabelecimento");
                 } else{
                     lvComentarios = (ListView)findViewById(R.id.lvComentarios);
                     avaliacaos = new ArrayList<Avaliacao>();
@@ -296,7 +294,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                             String nome  = jsonArray.getJSONObject(i).getString("nome");
                             String sobrenome  = jsonArray.getJSONObject(i).getString("sobrenome");
                             String data  = jsonArray.getJSONObject(i).getString("data");
-                            String descComentario  = jsonArray.getJSONObject(i).getString("idUsuario");
+                            String descComentario  = jsonArray.getJSONObject(i).getString("descComentario");
                             Long estabelecimento_idUnidade  = jsonArray.getJSONObject(i).getLong("estabelecimento_idUnidade");
                             Double avAtendimento = jsonArray.getJSONObject(i).getDouble("avAtendimento");
                             Double avEstrutura = jsonArray.getJSONObject(i).getDouble("avEstrutura");
@@ -307,11 +305,16 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                             Avaliacao avaliacao = new Avaliacao(idComentario,estabelecimento_idUnidade,nome + " " + sobrenome,
                                     avAtendimento, avEstrutura, avEquipamentos, avLocalizacao, avTempoAtendimento, descComentario);
 
-
+                            Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data);
+                            avaliacao.setDataComentario(dt);
+                            avaliacaos.add(avaliacao);
                         }
 
-                    }catch (Exception e){
+                        ArrayAdapter adapter = new AvaliacaoAdapter(ActivityEstabelecimento.this,avaliacaos);
+                        lvComentarios.setAdapter(adapter);
 
+                    }catch (Exception e){
+                        System.out.println("Erro no JSON: " + e.toString());
                     }
                 }
             }

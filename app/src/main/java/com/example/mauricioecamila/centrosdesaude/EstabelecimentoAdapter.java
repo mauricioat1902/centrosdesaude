@@ -38,7 +38,7 @@ public class EstabelecimentoAdapter extends ArrayAdapter<Estabelecimento> {
         TextView tvDistancia = (TextView)rowView.findViewById(R.id.tvDistancia);
         Button btnMap = (Button)rowView.findViewById(R.id.btnMap);
         RatingBar rbAvGeral = (RatingBar)rowView.findViewById(R.id.rbAvGeral);
-        rbAvGeral.setRating(Float.parseFloat(String.format("%.1f",elementos.get(position).getMdGeral())));
+        rbAvGeral.setRating(Float.parseFloat(elementos.get(position).getMdGeral().toString()));
 
         nomeEstabelecimento.setText(elementos.get(position).getNome());
         endereco.setText(elementos.get(position).getlogradouro() + ", " + elementos.get(position).getNumero());

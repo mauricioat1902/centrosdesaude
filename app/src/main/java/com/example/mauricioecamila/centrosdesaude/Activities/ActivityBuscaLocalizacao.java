@@ -182,8 +182,8 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                this.finish();
                 Intent startActivityLogin = new Intent(this, ActivityLogin.class);
-                finish();
                 startActivity(startActivityLogin);
         }
 
@@ -247,7 +247,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
 
             ProgressDialog dialog = new ProgressDialog(ActivityBuscaLocalizacao.this);
             dialog.setCancelable(true);
-            dialog.setMessage("Carregando");
+            dialog.setMessage("Buscando");
             dialog.show();
 
             if(!resultado.isEmpty()){

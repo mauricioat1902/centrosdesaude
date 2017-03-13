@@ -1,6 +1,6 @@
 package com.example.mauricioecamila.centrosdesaude;
 
-import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * Created by Mauricio e Camila on 04/03/2017.
@@ -14,7 +14,7 @@ public class Avaliacao {
     private String nomeEstabelecimento;
     private Double avAtendimento, avEstrutura, avEquipamentos, avLocalizacao, avTempoAtendimento;
     private String comentario;
-    private DateFormat dataComentario;
+    private Date dataComentario;
 
     public Avaliacao(int id, long idUnidade, String nomeUsuario , Double avAtendimento, Double avEstrutura, Double avEquipamentos, Double avLocalizacao, Double avTempoAtendimento, String comentario) {
         this.id = id;
@@ -104,11 +104,11 @@ public class Avaliacao {
         return avTempoAtendimento;
     }
 
-    public DateFormat getDataComentario() {
+    public Date getDataComentario() {
         return dataComentario;
     }
 
-    public void setDataComentario(DateFormat dataComentario) {
+    public void setDataComentario(Date dataComentario) {
         this.dataComentario = dataComentario;
     }
 

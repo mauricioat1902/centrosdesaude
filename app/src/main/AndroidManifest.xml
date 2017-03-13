@@ -81,7 +81,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.ActivityEstabelecimento"
-            android:label="@string/title_activity_estabelecimento"
+            android:label="Dados do Estabelecimento"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

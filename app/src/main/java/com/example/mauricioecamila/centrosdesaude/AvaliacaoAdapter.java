@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -29,27 +30,41 @@ public class AvaliacaoAdapter extends ArrayAdapter<Avaliacao> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.linha, parent, false);
+        View rowView = inflater.inflate(R.layout.linha_comentario, parent, false);
 
         TextView tvNomeUsuario = (TextView)rowView.findViewById(R.id.tvNomeUsuario);
         tvNomeUsuario.setText(elementosAvalicoes.get(position).getNomeUsuario());
+
+        TextView tvData = (TextView)rowView.findViewById(R.id.tvData);
+        /*Dateformat.SHORT // 03/04/10
+        Dateformat.MEDIUM // 03/04/2010
+        Dateformat.LONG //3 de Abril de 2010
+        Dateformat.FULL //Sábado, 3 de Abril de 2010*/
+        /*DateFormat usa um tipo como modelo, o SimpleDateFormat eu monto o modo que quero*/
+        //DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        tvData.setText(sdf.format(elementosAvalicoes.get(position).getDataComentario()));
+
+        RatingBar rbGeral = (RatingBar)rowView.findViewById(R.id.rbAvGeral);
+        rbGeral.setRating(Float.parseFloat(elementosAvalicoes.get(position).mediaAvaliacoes().toString()));
 
         TextView tvComentario = (TextView)rowView.findViewById(R.id.tvComentario);
         tvComentario.setText(elementosAvalicoes.get(position).getComentario());
 
         RatingBar rbEstruturaCom = (RatingBar)rowView.findViewById(R.id.rbEstruturaCom);
+        rbEstruturaCom.setRating(Float.parseFloat(elementosAvalicoes.get(position).getAvEstrutura().toString()));
+
         RatingBar rbAtendimentoCom = (RatingBar)rowView.findViewById(R.id.rbAtendimentoCom);
+        rbAtendimentoCom.setRating(Float.parseFloat(elementosAvalicoes.get(position).getAvAtendimento().toString()));
+
         RatingBar rbEquipamentosCom = (RatingBar)rowView.findViewById(R.id.rbEquipamentosCom);
+        rbEquipamentosCom.setRating(Float.parseFloat(elementosAvalicoes.get(position).getAvEquipamentos().toString()));
+
         RatingBar rbLocalizaçãoCom = (RatingBar)rowView.findViewById(R.id.rbLocalizaçãoCom);
+        rbLocalizaçãoCom.setRating(Float.parseFloat(elementosAvalicoes.get(position).getAvLocalizacao().toString()));
+
         RatingBar rbTempoAtendimento = (RatingBar)rowView.findViewById(R.id.rbTempoAtendimento);
-
-        TextView tvData = (TextView)rowView.findViewById(R.id.tvData);
-        tvData.setText(elementosAvalicoes.get(position).getDataComentario().toString());
-
-
-
-
-
+        rbTempoAtendimento.setRating(Float.parseFloat(elementosAvalicoes.get(position).getAvTempoAtendimento().toString()));
 
         return rowView;
     }

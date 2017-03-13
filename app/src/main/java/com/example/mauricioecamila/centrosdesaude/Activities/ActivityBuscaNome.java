@@ -104,7 +104,6 @@ public class ActivityBuscaNome extends AppCompatActivity
 
         botaoBusca.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 //Relizando a busca
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -242,8 +241,8 @@ public class ActivityBuscaNome extends AppCompatActivity
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                this.finish();
                 Intent startActivityLogin = new Intent(this, ActivityLogin.class);
-                finish();
                 startActivity(startActivityLogin);
         }
 

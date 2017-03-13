@@ -10,13 +10,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#063A59"
+    android:background="#277A9A"
     android:gravity="center">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="65dp"
-        app:srcCompat="@drawable/logo"
+        app:srcCompat="@drawable/logo_oficial"
         android:id="@+id/imageView3" />
 
     <LinearLayout
