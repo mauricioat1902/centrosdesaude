@@ -1,6 +1,5 @@
 package com.example.mauricioecamila.centrosdesaude.Activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -266,72 +265,67 @@ public class ActivityBuscaNome extends AppCompatActivity
         @Override
         protected void onPostExecute(String resultado) {
 
-            ProgressDialog dialog = new ProgressDialog(ActivityBuscaNome.this);
-            dialog.setCancelable(true);
-            dialog.setMessage("Carregando");
-            dialog.show();
-
-            if(!resultado.isEmpty()){
-                listView = (ListView) findViewById(R.id.listViewBuscaNome);
-                estabelecimentos = new ArrayList<Estabelecimento>();
-                try {
-                    JSONObject jsonObject = new JSONObject(resultado);
-                    JSONArray jsonArray = jsonObject.getJSONArray("estabelecimentos");
-                    for (int i=0;i<jsonArray.length();i++)
-                    {
-                        long id = Long.parseLong(jsonArray.getJSONObject(i).getString("idUnidade"));
-                        String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
-                        String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
-                        String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
-                        String temAtendimentoUrgencia = jsonArray.getJSONObject(i).getString("temAtendimentoUrgencia");
-                        String temAtendimentoAmbulatorial = jsonArray.getJSONObject(i).getString("temAtendimentoAmbulatorial");
-                        String temCentroCirurgico = jsonArray.getJSONObject(i).getString("temCentroCirurgico");
-                        String temObstetra = jsonArray.getJSONObject(i).getString("temObstetra");
-                        String temNeoNatal = jsonArray.getJSONObject(i).getString("temNeoNatal");
-                        String temDialise = jsonArray.getJSONObject(i).getString("temDialise");
-                        String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
-                        String numero = jsonArray.getJSONObject(i).getString("numero").toString();
-                        String bairro = jsonArray.getJSONObject(i).getString("bairro");
-                        String cidade = jsonArray.getJSONObject(i).getString("cidade");
-                        String nuCep = jsonArray.getJSONObject(i).getString("nuCep");
-                        String estado = jsonArray.getJSONObject(i).getString("estado_siglaEstado");
-                        String nuTelefone = jsonArray.getJSONObject(i).getString("nuTelefone");
-                        String turnoAtendimento = jsonArray.getJSONObject(i).getString("nmTurnoAtendimentocol");
-                        String latitude = jsonArray.getJSONObject(i).getString("lat");
-                        String longitude = jsonArray.getJSONObject(i).getString("long");
-                        Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
-                        Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
-                        Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
-                        Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
-                        Double mediaEquipamentos = jsonArray.getJSONObject(i).getDouble("mediaEquipamentos");
-                        Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
-                        Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
-
-                        Estabelecimento e = new Estabelecimento(id,nome,tipoEstabelecimento,vinculoSus,temAtendimentoUrgencia,temAtendimentoAmbulatorial,
-                                temCentroCirurgico,temObstetra,temNeoNatal,temDialise,logradouro,numero,bairro,cidade,nuCep,estado,nuTelefone,
-                                turnoAtendimento,latitude,longitude);
-                        e.setDistancia(distancia);
-                        e.setMdGeral(mediaGeral);
-                        e.setMdAtendimento(mediaAtendimento);
-                        e.setMdEstrutura(mediaEstrutura);
-                        e.setMdEquipamentos(mediaEquipamentos);
-                        e.setMdLocalizacao(mediaLocalizacao);
-                        e.setMdTempoAtendimento(mediaTempoAtendimento);
-
-                        estabelecimentos.add(e);
-                    }
-
-                    ArrayAdapter adaptador = new EstabelecimentoAdapter(ActivityBuscaNome.this,estabelecimentos);
-                    listView.setAdapter(adaptador);
-                    dialog.dismiss();
-                }catch (Exception e){
-                    dialog.dismiss();
-                        System.out.print(e.toString());
-                }
+            if(resultado.contains("Erro Conexao:")){
+                Toast.makeText(getApplicationContext(),"Erro no retorno da busca", Toast.LENGTH_LONG).show();
             }
-            else{
-                dialog.dismiss();
-                Toast.makeText(getApplicationContext(),"Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
+            else {
+                if (!resultado.isEmpty()) {
+                    listView = (ListView) findViewById(R.id.listViewBuscaNome);
+                    estabelecimentos = new ArrayList<Estabelecimento>();
+                    try {
+                        JSONObject jsonObject = new JSONObject(resultado);
+                        JSONArray jsonArray = jsonObject.getJSONArray("estabelecimentos");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("idUnidade"));
+                            String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
+                            String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
+                            String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
+                            String temAtendimentoUrgencia = jsonArray.getJSONObject(i).getString("temAtendimentoUrgencia");
+                            String temAtendimentoAmbulatorial = jsonArray.getJSONObject(i).getString("temAtendimentoAmbulatorial");
+                            String temCentroCirurgico = jsonArray.getJSONObject(i).getString("temCentroCirurgico");
+                            String temObstetra = jsonArray.getJSONObject(i).getString("temObstetra");
+                            String temNeoNatal = jsonArray.getJSONObject(i).getString("temNeoNatal");
+                            String temDialise = jsonArray.getJSONObject(i).getString("temDialise");
+                            String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
+                            String numero = jsonArray.getJSONObject(i).getString("numero").toString();
+                            String bairro = jsonArray.getJSONObject(i).getString("bairro");
+                            String cidade = jsonArray.getJSONObject(i).getString("cidade");
+                            String nuCep = jsonArray.getJSONObject(i).getString("nuCep");
+                            String estado = jsonArray.getJSONObject(i).getString("estado_siglaEstado");
+                            String nuTelefone = jsonArray.getJSONObject(i).getString("nuTelefone");
+                            String turnoAtendimento = jsonArray.getJSONObject(i).getString("nmTurnoAtendimentocol");
+                            String latitude = jsonArray.getJSONObject(i).getString("lat");
+                            String longitude = jsonArray.getJSONObject(i).getString("long");
+                            Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
+                            Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
+                            Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
+                            Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
+                            Double mediaEquipamentos = jsonArray.getJSONObject(i).getDouble("mediaEquipamentos");
+                            Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
+                            Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
+
+                            Estabelecimento e = new Estabelecimento(id, nome, tipoEstabelecimento, vinculoSus, temAtendimentoUrgencia, temAtendimentoAmbulatorial,
+                                    temCentroCirurgico, temObstetra, temNeoNatal, temDialise, logradouro, numero, bairro, cidade, nuCep, estado, nuTelefone,
+                                    turnoAtendimento, latitude, longitude);
+                            e.setDistancia(distancia);
+                            e.setMdGeral(mediaGeral);
+                            e.setMdAtendimento(mediaAtendimento);
+                            e.setMdEstrutura(mediaEstrutura);
+                            e.setMdEquipamentos(mediaEquipamentos);
+                            e.setMdLocalizacao(mediaLocalizacao);
+                            e.setMdTempoAtendimento(mediaTempoAtendimento);
+
+                            estabelecimentos.add(e);
+                        }
+
+                        ArrayAdapter adaptador = new EstabelecimentoAdapter(ActivityBuscaNome.this, estabelecimentos);
+                        listView.setAdapter(adaptador);
+                    } catch (Exception e) {
+                        System.out.print(e.toString());
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }//SolicitaDados

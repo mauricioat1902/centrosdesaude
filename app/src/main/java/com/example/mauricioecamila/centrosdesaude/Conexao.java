@@ -62,7 +62,7 @@ public class Conexao {
             return resposta.toString();
 
         }catch(Exception erro){
-            return "Erro: " + erro.toString();
+            return "Erro Conexao: " + erro.toString();
         } finally {
             //Se connection estiver conectado, vai desconectar
             if(connection != null){
