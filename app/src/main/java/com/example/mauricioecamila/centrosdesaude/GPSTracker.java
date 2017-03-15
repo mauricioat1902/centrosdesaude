@@ -1,6 +1,5 @@
 package com.example.mauricioecamila.centrosdesaude;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,8 +10,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by Mauricio e Camila on 28/01/2017.
@@ -205,29 +204,4 @@ public class GPSTracker extends Service implements LocationListener {
         return null;
     }
 
-    public void AlertaGPS(){
-        LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-        final Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
-        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-        builder.setMessage("O GPS está desativado. Deseja ativar?")
-                .setCancelable(false)
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") int which) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-
-                    }
-                })
-                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") int which) {
-                        dialog.cancel();
-                        if(!estaOn){
-                            Toast.makeText(getApplicationContext(), "O GPS está desativado.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        alert = builder.create();
-        alert.show();
-    }
 }

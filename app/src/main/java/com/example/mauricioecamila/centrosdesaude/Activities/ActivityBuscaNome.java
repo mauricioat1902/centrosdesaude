@@ -1,6 +1,7 @@
 package com.example.mauricioecamila.centrosdesaude.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -9,11 +10,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -57,6 +60,7 @@ public class ActivityBuscaNome extends AppCompatActivity
     LocationManager manager;
     String url = "";
     String parametros = "";
+    private AlertDialog alert = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,7 @@ public class ActivityBuscaNome extends AppCompatActivity
             // não pôde pegar a localização
             // GPS ou a Rede não está habilitada
             // Pergunta ao usuário para habilitar GPS/Rede em configurações
-            gps.AlertaGPS();
+            AlertaGPS();
         }
         if(!estaOn ){
             Toast.makeText(getApplicationContext(), "O GPS está desativado.", Toast.LENGTH_SHORT).show();
@@ -329,4 +333,30 @@ public class ActivityBuscaNome extends AppCompatActivity
             }
         }
     }//SolicitaDados
+
+    private void AlertaGPS(){
+        LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        final Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("O GPS está desativado. Deseja ativar?")
+                .setCancelable(false)
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") int which) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") int which) {
+                        dialog.cancel();
+                        if(!estaOn){
+                            Toast.makeText(getApplicationContext(), "O GPS está desativado.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        alert = builder.create();
+        alert.show();
+    }
 }

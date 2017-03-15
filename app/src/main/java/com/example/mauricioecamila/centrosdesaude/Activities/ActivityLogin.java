@@ -55,7 +55,7 @@ public class ActivityLogin extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     txtViewCriarConta.setTextColor(Color.WHITE);
-                    Intent abreCadastro = new Intent(ActivityLogin.this, ActivityPrincipal.class);
+                    Intent abreCadastro = new Intent(ActivityLogin.this, ActivityCadastro.class);
                     startActivity(abreCadastro);
                 }
             });

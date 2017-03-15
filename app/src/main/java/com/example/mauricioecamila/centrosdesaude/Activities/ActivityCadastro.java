@@ -34,9 +34,9 @@ public class ActivityCadastro extends AppCompatActivity {
 
         //Typeface custom_font = Typeface.createFromAsset(getAssets(),"assets/Lato-Light.ttf");
 
-        cadNome = (EditText) findViewById(R.id.CadNome);
-        cadEmail = (EditText) findViewById(R.id.CadEmail);
-        cadSenha = (EditText)findViewById(R.id.CadSenha);
+        cadNome = (EditText) findViewById(R.id.cadNome);
+        cadEmail = (EditText) findViewById(R.id.cadEmail);
+        cadSenha = (EditText)findViewById(R.id.cadSenha);
         botaoCancelar = (Button)findViewById(R.id.botaoCancelar);
         botaoCadastrar = (Button)findViewById(R.id.botaoCadastrar);
 
@@ -113,6 +113,6 @@ public class ActivityCadastro extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
+        //finish();
     }
 }

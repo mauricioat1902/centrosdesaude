@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +44,8 @@ public class EstabelecimentoAdapter extends ArrayAdapter<Estabelecimento> {
         nomeEstabelecimento.setText(elementos.get(position).getNome());
         endereco.setText(elementos.get(position).getlogradouro() + ", " + elementos.get(position).getNumero());
         LinearLayout llLinhaEst = (LinearLayout) rowView.findViewById(R.id.llLinhaEst);
-        tvDistancia.setText(elementos.get(position).getDistancia().toString() + " Km");
+
+        tvDistancia.setText(new DecimalFormat("0.0").format(elementos.get(position).getDistancia()).toString() + " Km");
 
 
         btnMap.setOnClickListener(new View.OnClickListener() {

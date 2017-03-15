@@ -62,7 +62,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityLogin" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -72,9 +72,10 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityMapa" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            </activity>
+        </activity>
         <activity
             android:name=".Activities.ActivityBuscaLocalizacao"
             android:label="Busca por Localização"
@@ -86,10 +87,11 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
+        <activity android:name=".Activities.ActivityInicial"></activity>
     </application>
 
 </manifest>

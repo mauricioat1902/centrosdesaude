@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,65 +9,136 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#87CEEB"
+    android:paddingTop="0dp"
+    android:background="#277A9A"
     android:gravity="center">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/part_logo_1" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/part_logo_2" />
+
+    </LinearLayout>
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/user"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Nome"
+            android:textAlignment="center"
+            android:ems="10"
+            android:id="@+id/cadNome"
+            android:textColorLink="@android:color/white"
+            android:textColorHint="#D3D3D3"
+            android:textColor="#FFFFFF"
+            android:background="#00000000"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#EEE9E9"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="13dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/user"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Nome Completo"
+            android:hint="SobreNome"
             android:textAlignment="center"
             android:ems="10"
-            android:id="@+id/CadNome" />
+            android:id="@+id/cadSobrenome"
+            android:textColorLink="@android:color/white"
+            android:textColorHint="#D3D3D3"
+            android:textColor="#FFFFFF"
+            android:background="#00000000"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#5fff"></LinearLayout>
+        android:background="#EEE9E9"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="13dp"
+        />
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/email"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Endereço de Email"
+            android:hint="Email"
             android:textAlignment="center"
             android:ems="10"
-            android:id="@+id/CadEmail" />
+            android:id="@+id/cadEmail"
+            android:textColorLink="@android:color/white"
+            android:textColorHint="#D3D3D3"
+            android:textColor="#FFFFFF"
+            android:background="#00000000"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#5fff"></LinearLayout>
+        android:background="#EEE9E9"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="13dp"
+        />
+
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/lock"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,12 +146,90 @@
             android:hint="Senha"
             android:textAlignment="center"
             android:ems="10"
-            android:id="@+id/CadSenha" />
+            android:id="@+id/cadSenha"
+            android:textColorLink="@android:color/white"
+            android:textColorHint="#D3D3D3"
+            android:textColor="#FFFFFF"
+            android:background="#00000000"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#5fff"></LinearLayout>
+        android:background="#EEE9E9"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="13dp"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/mob" />
+
+        <EditText
+            android:id="@+id/cadTel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:ems="10"
+            android:hint="Telefone"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D3D3D3"
+            android:textColorLink="@android:color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#EEE9E9"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="13dp"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etDataNascimento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="date" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:text="Masculino"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton2"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:text="Feminino"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,13 +239,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/botaoCadastrar" />
+            android:id="@+id/botaoCadastrar"
+            android:background="@drawable/gradiantwhite"
+            android:layout_marginRight="10dp" />
         <Button
             android:text="Cancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/botaoCancelar" />
+            android:id="@+id/botaoCancelar"
+            android:background="@drawable/gradiantwhite"/>
     </LinearLayout>
 
 </LinearLayout>

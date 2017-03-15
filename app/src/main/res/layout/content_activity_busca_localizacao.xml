@@ -16,14 +16,38 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selecione o raio de distância desejado"
-            android:textSize="15dp"
-            android:textColor="#000000"
-            android:textAlignment="center"/>
+            android:text="Digite o raio de distância desejado para realizar a busca"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Km" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -69,11 +93,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ListView
+            android:id="@+id/listViewBuscaLocalizacao"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/listViewBuscaLocalizacao">
-        </ListView>
+            android:layout_gravity="center"></ListView>
 
     </LinearLayout>
 
