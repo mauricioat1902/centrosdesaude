@@ -25,9 +25,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,19 +44,19 @@ import java.util.ArrayList;
 
 public class ActivityBuscaLocalizacao extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RadioGroup radioGroupKm;
+
     private Button botaoBuscaLocalizacao;
-    private AlertDialog alert = null;
     private int km = 5;
     private ListView listView;
     private ArrayList<Estabelecimento> estabelecimentos;
     private Estabelecimento estabelecimento;
     private Button btnMap;
+    private EditText etRaioBusca;
 
     private String url = "";
     private String parametros = "";
-    double latitude = 0;
-    double longitude = 0;
+    private double latitude = 0;
+    private double longitude = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +76,6 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
 
         LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
-        radioGroupKm = (RadioGroup) findViewById(R.id.radioGroupKm);
         botaoBuscaLocalizacao = (Button) findViewById(R.id.botaoBuscaLocalizacao);
 
         GPSTracker gps = new GPSTracker(ActivityBuscaLocalizacao.this);
@@ -93,20 +92,18 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
             Toast.makeText(getApplicationContext(), "O GPS está desativado.", Toast.LENGTH_SHORT).show();
         }
 
+        etRaioBusca = (EditText) findViewById(R.id.etRaioBusca);
+
+
         botaoBuscaLocalizacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (radioGroupKm.getCheckedRadioButtonId()){
-                    case R.id.radioButton10:
-                        km = 5;
-                        break;
-                    case R.id.radioButton20:
-                        km = 10;
-                        break;
-                    case R.id.radioButton30:
-                        km = 15;
-                        break;
+                if(etRaioBusca.getText().toString().trim().length() > 0){
+                    km = Integer.parseInt(etRaioBusca.getText().toString());
+                }else{
+                    km = 5;
                 }
+
                 //Relizando a busca
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -131,6 +128,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
 
     private void AlertaGPS(){
         LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        AlertDialog alert = null;
         final Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("O GPS está desativado. Deseja ativar?")
@@ -168,7 +166,8 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
                 startActivity(startActivityBuscaLocalizacao);
                 break;
             case R.id.nav_buscaEspec:
-                //ShowFragment(new FragmentoMapaProvider(), "FragmentoMapaProvider");
+                Intent startActivityBuscaEspec = new Intent(this, ActivityBuscaEspecialidade.class);
+                startActivity(startActivityBuscaEspec);
                 break;
             case R.id.nav_buscaNome:
                 //ShowFragment(new FragmentoBuscaNome(), "FragmentoBuscaNome");

@@ -180,7 +180,7 @@
             android:background="#00000000"
             android:ems="10"
             android:hint="Telefone"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textColorHint="#D3D3D3"
@@ -200,34 +200,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/user"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp" />
         <EditText
-            android:id="@+id/etDataNascimento"
+            android:id="@+id/cadDataNascimento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:hint="Data de Nascimento"
             android:ems="10"
-            android:inputType="date" />
+            android:inputType="date"
+            android:textAlignment="center"
+            android:textColorLink="@android:color/white"
+            android:textColorHint="#D3D3D3"
+            android:textColor="#FFFFFF"
+            android:background="#00000000"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#EEE9E9"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="13dp"
+        />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <RadioButton
-            android:text="Masculino"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioButton2"
-            android:layout_weight="1" />
+        <RadioGroup
+            android:id="@+id/radioGroupSexo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:text="Feminino"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioButton"
-            android:layout_weight="1" />
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Masculino"
+                android:textColor="@android:color/white"
+                android:textColorLink="@android:color/holo_red_dark" />
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Feminino"
+                android:textColor="@android:color/white"
+                android:textColorLink="@android:color/holo_red_dark" />
+        </RadioGroup>
     </LinearLayout>
 
     <LinearLayout

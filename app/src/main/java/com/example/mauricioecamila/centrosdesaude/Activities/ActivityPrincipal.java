@@ -166,7 +166,8 @@ public class ActivityPrincipal extends AppCompatActivity
                 startActivity(startActivityBuscaLocalizacao);
                 break;
             case R.id.nav_buscaEspec:
-                //ShowFragment(new FragmentoMapaProvider(), "FragmentoMapaProvider");
+                Intent startActivityBuscaEspec = new Intent(this, ActivityBuscaEspecialidade.class);
+                startActivity(startActivityBuscaEspec);
                 break;
             case R.id.nav_buscaNome:
                 //ShowFragment(new FragmentoBuscaNome(), "FragmentoBuscaNome");

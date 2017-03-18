@@ -10,22 +10,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
+
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 
 public class ActivityCadastro extends AppCompatActivity {
 
     private EditText cadNome;
     private EditText cadSenha;
     private EditText cadEmail;
+    private EditText cadDataNascimento;
+    private EditText cadTel;
 
     private Button botaoCadastrar;
     private String url = "";
     private String parametros = "";
-
+    private RadioGroup radioGroupSexo;
     private Button botaoCancelar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,15 @@ public class ActivityCadastro extends AppCompatActivity {
         cadSenha = (EditText)findViewById(R.id.cadSenha);
         botaoCancelar = (Button)findViewById(R.id.botaoCancelar);
         botaoCadastrar = (Button)findViewById(R.id.botaoCadastrar);
+        radioGroupSexo = (RadioGroup) findViewById(R.id.radioGroupSexo);
+        cadDataNascimento = (EditText) findViewById(R.id.cadDataNascimento);
+        cadTel = (EditText) findViewById(R.id.cadTel);
+
+        MaskEditTextChangedListener maskTEL = new MaskEditTextChangedListener("(##)#####-####", cadTel);
+        cadTel.addTextChangedListener(maskTEL);
+
+        MaskEditTextChangedListener maskDATA = new MaskEditTextChangedListener("##/##/####", cadDataNascimento);
+        cadDataNascimento.addTextChangedListener(maskDATA);
 
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override

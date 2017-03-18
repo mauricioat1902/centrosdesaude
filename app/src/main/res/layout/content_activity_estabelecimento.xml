@@ -195,7 +195,7 @@
                 android:layout_weight="0.19"
                 android:gravity="top"
                 android:layout_height="120dp"
-                android:background="@drawable/modelo_edit"/>
+                android:background="@drawable/modelo_edit" />
 
             <Button
                 android:text="Enviar"

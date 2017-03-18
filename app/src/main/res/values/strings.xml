@@ -13,4 +13,5 @@
     <string name="title_activity_mapa">ActivityMapa</string>
     <string name="title_activity_busca_localizacao">ActivityBuscaLocalizacao</string>
     <string name="title_activity_estabelecimento">ActivityEstabelecimento</string>
+    <string name="title_activity_busca_especialidade">ActivityBuscaEspecialidade</string>
 </resources>
