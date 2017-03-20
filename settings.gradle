@@ -1,1 +1,1 @@
-include ':app', ':AndroidMask-1.0.0'
+include ':app', ':AndroidMask-1.0.0', ':activation', ':additionnal', ':mail'
