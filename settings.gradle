@@ -1,1 +1,1 @@
-include ':app', ':AndroidMask-1.0.0', ':activation', ':additionnal', ':mail'
+include ':app', ':AndroidMask-1.0.0', ':activation', ':additionnal', ':mail', ':facebook-android-sdk-4.20.0'
