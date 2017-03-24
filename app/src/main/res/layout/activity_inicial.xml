@@ -55,7 +55,7 @@
                 android:layout_height="match_parent"
 
                 android:padding="16dp"
-                android:hint="Cadastrar-se com E-mail"
+                android:hint="Entrar com E-mail"
                 android:textColorHint="#fff"
                 android:textSize="14dp"
                 android:inputType="text"

@@ -1,5 +1,6 @@
 package com.example.mauricioecamila.centrosdesaude.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,7 +34,7 @@ import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
-import com.example.mauricioecamila.centrosdesaude.EstabelecimentoAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapter;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
 
@@ -57,10 +58,11 @@ public class ActivityBuscaNome extends AppCompatActivity
     private double longitude = 0;
     private GPSTracker gps;
     private FragmentManager fragmentManager;
-    LocationManager manager;
-    String url = "";
-    String parametros = "";
+    private LocationManager manager;
+    private String url = "";
+    private String parametros = "";
     private AlertDialog alert = null;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,11 @@ public class ActivityBuscaNome extends AppCompatActivity
 
         botaoBusca.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                dialog = new ProgressDialog(ActivityBuscaNome.this);
+                dialog.setCancelable(true);
+                dialog.setMessage("Carregando");
+                dialog.show();
                 //Relizando a busca
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -122,13 +129,13 @@ public class ActivityBuscaNome extends AppCompatActivity
                         if(gps.canGetLocation()){
                             latitude = gps.getLatitude();
                             longitude = gps.getLongitude();
-                            url = "http://centrosdesaude.com.br/buscaNomeGPS.php";
+                            url = "http://centrosdesaude.com.br/app/buscaNomeGPS.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado + "&lat=" + latitude + "&lng=" + longitude;
                             new SolicitaDados().execute(url);
                         }
                         else {
                             //Criar a URL
-                            url = "http://centrosdesaude.com.br/buscaNome.php";
+                            url = "http://centrosdesaude.com.br/app/buscaNome.php";
                             //url = "http://localhost:8090/login/logar.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado;
                             new SolicitaDados().execute(url);
@@ -137,6 +144,7 @@ public class ActivityBuscaNome extends AppCompatActivity
 
                 }
                 else{
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
                 }
                 //Fim da busca
@@ -149,25 +157,6 @@ public class ActivityBuscaNome extends AppCompatActivity
     public void onClick(View v) {
 
     }
-    /*
-    public void onClick(View v) {
-
-        switch (v.getId()){
-            case R.id.botaoBusca:
-                ShowFragment(new FragmentoMapaProvider(), "Fragmento do Mapa");
-                break;
-        }
-
-    }*/
-
-    /*Método do botão para chamar outra activity
-    botaoBusca.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent it = new Intent(this, NovaTela.class);
-                startActivity(it);
-            }
-        });
-     */
 
 
     @Override
@@ -271,7 +260,8 @@ public class ActivityBuscaNome extends AppCompatActivity
         protected void onPostExecute(String resultado) {
 
             if(resultado.contains("Erro Conexao:")){
-                Toast.makeText(getApplicationContext(),"Erro no retorno da busca", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                Toast.makeText(getApplicationContext(),"Erro no retorno da busca: " + resultado, Toast.LENGTH_LONG).show();
             }
             else {
                 if (!resultado.isEmpty()) {
@@ -325,10 +315,13 @@ public class ActivityBuscaNome extends AppCompatActivity
 
                         ArrayAdapter adaptador = new EstabelecimentoAdapter(ActivityBuscaNome.this, estabelecimentos);
                         listView.setAdapter(adaptador);
+                        dialog.dismiss();
                     } catch (Exception e) {
+                        dialog.dismiss();
                         System.out.print(e.toString());
                     }
                 } else {
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
                 }
             }

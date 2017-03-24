@@ -25,6 +25,7 @@ public class ActivityCadastro extends AppCompatActivity {
     private EditText cadEmail;
     private EditText cadDataNascimento;
     private EditText cadTel;
+    private EditText cadSobrenome;
 
     private Button botaoCadastrar;
     private String url = "";
@@ -48,12 +49,15 @@ public class ActivityCadastro extends AppCompatActivity {
         radioGroupSexo = (RadioGroup) findViewById(R.id.radioGroupSexo);
         cadDataNascimento = (EditText) findViewById(R.id.cadDataNascimento);
         cadTel = (EditText) findViewById(R.id.cadTel);
+        cadSobrenome = (EditText) findViewById(R.id.cadSobrenome);
 
         MaskEditTextChangedListener maskTEL = new MaskEditTextChangedListener("(##)#####-####", cadTel);
         cadTel.addTextChangedListener(maskTEL);
 
         MaskEditTextChangedListener maskDATA = new MaskEditTextChangedListener("##/##/####", cadDataNascimento);
         cadDataNascimento.addTextChangedListener(maskDATA);
+
+
 
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,14 +67,29 @@ public class ActivityCadastro extends AppCompatActivity {
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
                 if(networkInfo != null && networkInfo.isConnected()){
-                    String nome = cadNome.getText().toString();
-                    String email = cadEmail.getText().toString();
-                    String senha = cadSenha.getText().toString();
+                    String nome = cadNome.getText().toString().trim();
+                    String sobreNome = cadSobrenome.getText().toString().trim();
+                    String email = cadEmail.getText().toString().trim();
+                    String senha = cadSenha.getText().toString().trim();
+                    String dtNascimento = cadDataNascimento.getText().toString().trim();
+                    String telefone = cadTel.getText().toString().trim();
+                    String sexo = "";
 
-                    //Verifica se há algo no email e senha
-                    if(email.isEmpty() || senha.isEmpty() || nome.isEmpty()){
+                    switch (radioGroupSexo.getCheckedRadioButtonId()){
+                        case R.id.rbMasculino:
+                            sexo = "M";
+                            break;
+                        case R.id.rbFeminino:
+                            sexo = "F";
+                            break;
+
+                    }
+                    //Verifica se há campos sem estar preenchidos
+                    if(email.isEmpty() || sobreNome.isEmpty() || senha.isEmpty() || nome.isEmpty() ||
+                            dtNascimento.isEmpty() || telefone.isEmpty() || sexo.isEmpty()){
                         Toast.makeText(getApplicationContext(), "Nenhum campo pode estar vazio", Toast.LENGTH_LONG).show();
                     }
+
                     else{
                         //Criar a URL
                         url = "http://192.168.0.31:8090/login/registrar.php";

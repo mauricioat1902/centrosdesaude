@@ -1,5 +1,6 @@
 package com.example.mauricioecamila.centrosdesaude.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +31,7 @@ import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
-import com.example.mauricioecamila.centrosdesaude.EstabelecimentoAdapterRV;
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapterRV;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
 
@@ -46,7 +47,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
     private String parametros = "";
     private double latitude = 0;
     private double longitude = 0;
-
+    private ProgressDialog dialog;
     private Button btnBuscarEspec;
     private ArrayList<Estabelecimento> estabelecimentos;
     private RecyclerView rvBuscaEspecialidade;
@@ -95,6 +96,11 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         btnBuscarEspec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                dialog = new ProgressDialog(ActivityBuscaEspecialidade.this);
+                dialog.setCancelable(true);
+                dialog.setMessage("Carregando");
+                dialog.show();
                 //Relizando a busca
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -110,7 +116,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                         if(gps.canGetLocation()){
                             latitude = gps.getLatitude();
                             longitude = gps.getLongitude();
-                            url = "http://centrosdesaude.com.br/buscaNomeGPS.php";
+                            url = "http://centrosdesaude.com.br/app/buscaNomeGPS.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado + "&lat=" + latitude + "&lng=" + longitude;
                             new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
                         }
@@ -125,6 +131,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
 
                 }
                 else{
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
                 }
             }
@@ -255,6 +262,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         protected void onPostExecute(String resultado) {
 
             if(resultado.contains("Erro Conexao:")){
+                dialog.dismiss();
                 Toast.makeText(getApplicationContext(),"Erro no retorno da busca", Toast.LENGTH_LONG).show();
             }
             else {
@@ -309,11 +317,13 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
 
                         EstabelecimentoAdapterRV adapter = new EstabelecimentoAdapterRV(ActivityBuscaEspecialidade.this,estabelecimentos);
                         rvBuscaEspecialidade.setAdapter(adapter);
-
+                        dialog.dismiss();
                     } catch (Exception e) {
+                        dialog.dismiss();
                         System.out.print(e.toString());
                     }
                 } else {
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
                 }
             }

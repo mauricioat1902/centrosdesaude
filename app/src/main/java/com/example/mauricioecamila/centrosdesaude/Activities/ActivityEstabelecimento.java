@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Avaliacao;
-import com.example.mauricioecamila.centrosdesaude.AvaliacaoAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.AvaliacaoAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
 

@@ -55,7 +55,7 @@
             android:label="Busca por nome"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activities.ActivityLogin"
             android:label="Centros de Saúde"
@@ -70,7 +70,7 @@
         </activity>
         <activity
             android:name=".Activities.ActivityMapa"
-            android:label="@string/title_activity_mapa"
+            android:label="Mapa"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -88,8 +88,8 @@
             android:name=".Activities.ActivityEstabelecimento"
             android:label="Dados do Estabelecimento"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento" />
 
@@ -97,13 +97,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.ActivityInicial" />
-
         <activity
             android:name=".Activities.ActivityBuscaEspecialidade"
             android:label="Busca por Especialidade"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.ActivityRecuperarSenha"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".Activities.ActivityRanking"
+            android:label="@string/title_activity_ranking"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

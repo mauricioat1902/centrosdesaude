@@ -1,4 +1,4 @@
-package com.example.mauricioecamila.centrosdesaude;
+package com.example.mauricioecamila.centrosdesaude.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
+import com.example.mauricioecamila.centrosdesaude.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

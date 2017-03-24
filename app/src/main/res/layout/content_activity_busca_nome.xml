@@ -18,20 +18,48 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
+        <!--EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/modelo_edit"
+        android:drawableLeft="@drawable/ic_search_black_24dp"
+        android:hint="Nome do estabelecimento"
+        android:text=""
+        android:maxLines="1"/-->
         <EditText
             android:id="@+id/editText1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/modelo_edit"
-            android:drawableLeft="@drawable/ic_search_black_24dp"
-            android:hint="Nome do estabelecimento"
-            android:text="" />
+            android:layout_weight="1.78"
+            android:background="@drawable/rect"
+            android:drawableRight="@drawable/ic_search_black_24dp"
+            android:elevation="8dp"
+            android:ems="10"
+            android:hint="Buscar..."
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:padding="15dp"
+            android:textSize="18sp" />
 
-        <Spinner
-            android:id="@+id/spinnerEstado"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/modelo_spinner" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/rect"
+            android:baselineAligned="false">
+
+            <Spinner
+                android:id="@+id/spinnerEstado"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="8dp"
+                android:ems="10"
+
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
 
     </LinearLayout>
 

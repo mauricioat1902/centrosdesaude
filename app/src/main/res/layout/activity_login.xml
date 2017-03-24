@@ -105,4 +105,14 @@
         android:id="@+id/txtViewCriarConta"
         android:textColor="#BEBEBE"
         android:clickable="false" />
+
+    <TextView
+        android:text="Recuperar Senha"
+        android:textSize="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/tvRecuperarSenha"
+        android:textColor="#BEBEBE"
+        android:clickable="false" />
 </LinearLayout>

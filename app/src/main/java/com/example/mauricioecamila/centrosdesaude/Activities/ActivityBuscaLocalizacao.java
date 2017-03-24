@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
-import com.example.mauricioecamila.centrosdesaude.EstabelecimentoAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapter;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
 
@@ -52,6 +52,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
     private Estabelecimento estabelecimento;
     private Button btnMap;
     private EditText etRaioBusca;
+    private ProgressDialog dialog;
 
     private String url = "";
     private String parametros = "";
@@ -98,6 +99,10 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
         botaoBuscaLocalizacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog = new ProgressDialog(ActivityBuscaLocalizacao.this);
+                dialog.setCancelable(true);
+                dialog.setMessage("Carregando");
+                dialog.show();
                 if(etRaioBusca.getText().toString().trim().length() > 0){
                     km = Integer.parseInt(etRaioBusca.getText().toString());
                 }else{
@@ -110,13 +115,14 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
                 //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
                 if(networkInfo != null && networkInfo.isConnected()){
                         //Criar a URL
-                        url = "http://centrosdesaude.com.br/buscaLocalizacao.php";
+                        url = "http://centrosdesaude.com.br/app/buscaLocalizacao.php";
                         //url = "http://localhost:8090/login/logar.php";
                         parametros = "?lat=" + latitude + "&lng=" + longitude + "&km=" +km;
                         new ActivityBuscaLocalizacao.SolicitaDados().execute(url);
 
                 }
                 else{
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
                 }
                 //Fim da busca
@@ -244,11 +250,6 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
         @Override
         protected void onPostExecute(String resultado) {
 
-            ProgressDialog dialog = new ProgressDialog(ActivityBuscaLocalizacao.this);
-            dialog.setCancelable(true);
-            dialog.setMessage("Buscando");
-            dialog.show();
-
             if(!resultado.isEmpty()){
                 listView = (ListView) findViewById(R.id.listViewBuscaLocalizacao);
                 estabelecimentos = new ArrayList<Estabelecimento>();
@@ -307,29 +308,6 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
                     ArrayAdapter adaptador = new EstabelecimentoAdapter(ActivityBuscaLocalizacao.this,estabelecimentos);
                     listView.setAdapter(adaptador);
                     dialog.dismiss();
-                    //Click no item do listeview
-                    /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView parent, View view, int position, long id) {
-                            TextView nmEst = (TextView)findViewById(R.id.nomeEstabelecimento);
-
-                            //Toast.makeText(ActivityBuscaNome.this, "Teste de Click", Toast.LENGTH_LONG).show();
-                            for (Estabelecimento est: estabelecimentos) {
-                                if(nmEst.getText().toString().contains(est.getNome()))
-                                    estabelecimento = est;
-                            }
-
-                            Intent intent = new Intent(ActivityBuscaLocalizacao.this, ActivityMapa.class);
-                            //Passando dados para a próxima Activity
-                            Bundle parametros = new Bundle();
-                            String resposta = estabelecimento.getLatitude();
-                            parametros.putString("latitude", resposta);
-                            resposta = estabelecimento.getLongitude();
-                            parametros.putString("longitude", resposta);
-
-                            intent.putExtras(parametros);
-                            startActivity(intent);
-                        }//onItemClick
-                    });//setOnClickListener*/
                 }catch (Exception e){
                     dialog.dismiss();
                     System.out.print(e.toString());

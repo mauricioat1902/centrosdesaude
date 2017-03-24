@@ -30,7 +30,8 @@ public class ActivityLogin extends AppCompatActivity {
     private Button botaoEntrar;
     private TextView txtViewCriarConta;
     private Usuario usuario;
-
+    private TextView tvRecuperarSenha;
+    ProgressDialog dialog;
 
     private String url = "";
     private String parametros = "";
@@ -50,6 +51,7 @@ public class ActivityLogin extends AppCompatActivity {
             editSenha = (EditText) findViewById(R.id.editSenha);
             botaoEntrar = (Button) findViewById(R.id.botaoEntrar);
             txtViewCriarConta = (TextView) findViewById(R.id.txtViewCriarConta);
+            tvRecuperarSenha = (TextView) findViewById(R.id.tvRecuperarSenha);
 
             txtViewCriarConta.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -60,9 +62,21 @@ public class ActivityLogin extends AppCompatActivity {
                 }
             });
 
+            tvRecuperarSenha.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent abreRecuperarSenha = new Intent(ActivityLogin.this, ActivityRecuperarSenha.class);
+                    startActivity(abreRecuperarSenha);
+                }
+            });
+
             botaoEntrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dialog = new ProgressDialog(ActivityLogin.this);
+                    dialog.setCancelable(true);
+                    dialog.setMessage("Carregando...");
+                    dialog.show();
                     //enviarDados(v);
                     //Verifica o estado da rede e conexão
                     ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -77,7 +91,7 @@ public class ActivityLogin extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Nenhum campo pode estar vazio", Toast.LENGTH_LONG).show();
                         } else {
                             //Criar a URL
-                            url = "http://centrosdesaude.com.br/logar.php";
+                            url = "http://centrosdesaude.com.br/app/logar.php";
                             //url = "http://localhost:8090/login/logar.php";
                             parametros = "?email=" + email + "&senha=" + senha;
                             new SolicitaDados().execute(url);
@@ -104,11 +118,6 @@ public class ActivityLogin extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String resultado) {
-
-            ProgressDialog dialog = new ProgressDialog(ActivityLogin.this);
-            dialog.setCancelable(true);
-            dialog.setMessage("Carregando");
-            dialog.show();
             //MyDialog md = new MyDialog(ActivityLogin.this, "");
 
             if(resultado.contains("Erro:")){
@@ -127,9 +136,10 @@ public class ActivityLogin extends AppCompatActivity {
                         usuario = new Usuario(idUsuario,nomeUsuario,sobrenomeUsuario,email,sexo);
                         ArmazenarDadosLogin(usuario);
                     } catch (JSONException e) {
+                        dialog.dismiss();
                         e.printStackTrace();
                     }
-
+                    dialog.dismiss();
                     Intent abrePrincipal = new Intent(ActivityLogin.this, ActivityPrincipal.class);
                     startActivity(abrePrincipal);
                 }

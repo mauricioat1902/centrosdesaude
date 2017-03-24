@@ -1,4 +1,4 @@
-package com.example.mauricioecamila.centrosdesaude;
+package com.example.mauricioecamila.centrosdesaude.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.mauricioecamila.centrosdesaude.Avaliacao;
+import com.example.mauricioecamila.centrosdesaude.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

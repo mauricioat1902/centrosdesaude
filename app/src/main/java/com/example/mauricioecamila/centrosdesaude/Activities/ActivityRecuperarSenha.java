@@ -40,8 +40,7 @@ public class ActivityRecuperarSenha extends AppCompatActivity {
         btnRecEnviar = (Button) findViewById(R.id.btnRecEnviar);
         context = this;
 
-        //destinatario = etRecEmail.getText().toString().trim();
-        destinatario = "mauricioat1902@gmail.com";
+        destinatario = etRecEmail.getText().toString().trim();
         titulo = "Recuperação de Senha Centros de Saúde";
         mensagemTexto = "Nova senha provisória: CentrosSaude3562";
 
