@@ -66,7 +66,6 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
     private String url = "";
     private String parametros = "";
 
-    private String url2 = "";
     private String parametros2 = "";
 
     @Override
@@ -173,7 +172,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
                 if(networkInfo != null && networkInfo.isConnected()){
                     //Criar a URL
-                    url = "http://centrosdesaude.com.br/enviarComentario.php";
+                    url = "http://centrosdesaude.com.br/app/enviarComentario.php";
                     parametros = "?idUsuario=" + idUsuario + "&idEstabelecimento=" +  idEstabelecimento + "&descComentario=" + descComentario;
 
                     new ActivityEstabelecimento.SolicitaDados().execute(url);
@@ -191,7 +190,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()){
             //Criar a URL
-            url = "http://centrosdesaude.com.br/retornoComentarios.php";
+            url = "http://centrosdesaude.com.br/app/retornoComentarios.php";
             parametros2 = "?idUnidade=" + idEstabelecimento;
             new ActivityEstabelecimento.CarregaComentarios().execute(url);
         }
@@ -279,7 +278,6 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         protected void onPostExecute(String resultado) {
             if (!resultado.isEmpty()) {
                 if (resultado.contains("Não houve retorno na busca")) {
-                    System.out.println("Não houve retorno na busca de comentários");
                     TextView tvSemRetorno = (TextView)findViewById(R.id.tvSemRetorno);
                     tvSemRetorno.setText("Não há comentários desse Estabelecimento");
                 } else{

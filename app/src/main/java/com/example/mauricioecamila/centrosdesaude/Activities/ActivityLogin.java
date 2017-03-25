@@ -120,7 +120,8 @@ public class ActivityLogin extends AppCompatActivity {
         protected void onPostExecute(String resultado) {
             //MyDialog md = new MyDialog(ActivityLogin.this, "");
 
-            if(resultado.contains("Erro:")){
+            if(resultado.contains("Erro Conexao: ")){
+                dialog.dismiss();
                 Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
             }
             else{
@@ -135,18 +136,17 @@ public class ActivityLogin extends AppCompatActivity {
                         String sexo = jsonArray.getJSONObject(0).getString("sexo");
                         usuario = new Usuario(idUsuario,nomeUsuario,sobrenomeUsuario,email,sexo);
                         ArmazenarDadosLogin(usuario);
+                        Intent abrePrincipal = new Intent(ActivityLogin.this, ActivityPrincipal.class);
+                        startActivity(abrePrincipal);
                     } catch (JSONException e) {
                         dialog.dismiss();
                         e.printStackTrace();
                     }
                     dialog.dismiss();
-                    Intent abrePrincipal = new Intent(ActivityLogin.this, ActivityPrincipal.class);
-                    startActivity(abrePrincipal);
                 }
                 else{
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(),"Usuário ou senha estão incorretos", Toast.LENGTH_LONG).show();
-
                 }
             }
         }
