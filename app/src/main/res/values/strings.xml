@@ -16,4 +16,8 @@
     <string name="title_activity_busca_especialidade">ActivityBuscaEspecialidade</string>
     <string name="title_activity_ranking">ActivityRanking</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string-array name="tab_titulos">
+        <item>GERAL</item>
+        <item>CATEGORIA</item>
+    </string-array>
 </resources>

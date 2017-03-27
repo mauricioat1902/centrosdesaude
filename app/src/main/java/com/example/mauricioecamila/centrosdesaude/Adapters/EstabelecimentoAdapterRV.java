@@ -20,10 +20,6 @@ import com.example.mauricioecamila.centrosdesaude.R;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-/**
- * Created by Mauricio e Camila on 18/03/2017.
- */
-
 public class EstabelecimentoAdapterRV extends RecyclerView.Adapter<EstabelecimentoAdapterRV.MyViewHolder> {
 
     private ArrayList<Estabelecimento> estabelecimentos;

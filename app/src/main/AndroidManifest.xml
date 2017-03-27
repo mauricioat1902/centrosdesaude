@@ -80,7 +80,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.ActivityBuscaLocalizacao"
+            android:name=".Activities.ActivityBuscaProximidade"
             android:label="Busca por Localização"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

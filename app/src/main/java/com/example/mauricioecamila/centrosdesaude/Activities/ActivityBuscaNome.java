@@ -215,7 +215,7 @@ public class ActivityBuscaNome extends AppCompatActivity
         {
             case R.id.nav_buscaLoc:
                 //ShowFragment(new FragmentoMapa(), "FragmentoMapa");
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaLocalizacao.class);
+                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
                 startActivity(startActivityBuscaLocalizacao);
                 break;
             case R.id.nav_buscaEspec:
@@ -227,9 +227,10 @@ public class ActivityBuscaNome extends AppCompatActivity
                 Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
                 startActivity(startActivityBuscaNome);
                 break;
-            /*case R.id.nav_ExemploProvider:
-                ShowFragment(new ExemploProviderFragmentV1(), "ExemploProviderFragmentV1");
-                break;*/
+            case R.id.nav_Ranking:
+                Intent startActitivy = new Intent(this, ActivityRanking.class);
+                startActivity(startActitivy);
+                break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();

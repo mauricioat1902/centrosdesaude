@@ -1,6 +1,7 @@
 package com.example.mauricioecamila.centrosdesaude.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -12,21 +13,26 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mauricioecamila.centrosdesaude.R;
 
+import java.util.ArrayList;
+
 public class ActivityPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FragmentManager fragmentManager;
+    private AlertDialog alertDialog;
 
 
     @Override
@@ -47,16 +53,6 @@ public class ActivityPrincipal extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Pega os dados do usuário armezados na SharedPreferences
-        //SharedPreferences preferences = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
-        //navNome = (TextView)navigationView.getHeaderView(R.id.nav_header_activity_principal).findViewById(R.id.navEmailUsuario);
-        //navNome.setText("TESTE");
-        //navNome = (TextView)findViewById(R.id.navNomeUsuario);
-        //navEmail = (TextView)findViewById(R.id.navEmailUsuario);
-        //navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
-        //navEmail.setText(preferences.getString("emailUsuario", "Não encontrado"));
-
-
 
         //Código para chamar um fragmento
         //begin
@@ -75,15 +71,47 @@ public class ActivityPrincipal extends AppCompatActivity
         botaoProcurarEstabelecimento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ActivityPrincipal.this, ActivityBuscaNome.class);
-                startActivity(it);
+
+
+                ArrayList<String> itens1 = new ArrayList<String>();
+                itens1.add("Buscar por Proximidade");
+                itens1.add("Buscar por Especialidade");
+                itens1.add("Buscar por Nome da Unidade");
+                final CharSequence[] itens = {"Buscar por Proximidade","Buscar por Especialidade","Buscar por Nome da Unidade"};
+                ArrayAdapter adapter = new ArrayAdapter(ActivityPrincipal.this, R.layout.dialog_itens_buscas, itens);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ActivityPrincipal.this);
+                builder.setTitle("Escolha a busca desejada:");
+                builder.setItems(itens, new DialogInterface.OnClickListener() {
+                    Intent it;
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                it = new Intent(ActivityPrincipal.this, ActivityBuscaProximidade.class);
+                                startActivity(it);
+                                break;
+                            case 1:
+                                it = new Intent(ActivityPrincipal.this, ActivityBuscaEspecialidade.class);
+                                startActivity(it);
+                                break;
+                            case 2:
+                                it = new Intent(ActivityPrincipal.this, ActivityBuscaNome.class);
+                                startActivity(it);
+                                break;
+                        }
+                    }
+                });
+                alertDialog = builder.create();
+                alertDialog.show();
+                /*Intent it = new Intent(ActivityPrincipal.this, ActivityBuscaNome.class);
+                startActivity(it);*/
             }
         });
 
         botaoBuscaLocalizacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ActivityPrincipal.this, ActivityBuscaLocalizacao.class);
+                Intent it = new Intent(ActivityPrincipal.this, ActivityBuscaProximidade.class);
                 startActivity(it);
             }
         });
@@ -162,7 +190,7 @@ public class ActivityPrincipal extends AppCompatActivity
         {
             case R.id.nav_buscaLoc:
                 //ShowFragment(new FragmentoMapa(), "FragmentoMapa");
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaLocalizacao.class);
+                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
                 startActivity(startActivityBuscaLocalizacao);
                 break;
             case R.id.nav_buscaEspec:
@@ -174,9 +202,10 @@ public class ActivityPrincipal extends AppCompatActivity
                 Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
                 startActivity(startActivityBuscaNome);
                 break;
-            /*case R.id.nav_ExemploProvider:
-                ShowFragment(new ExemploProviderFragmentV1(), "ExemploProviderFragmentV1");
-                break;*/
+            case R.id.nav_Ranking:
+                Intent startActitivy = new Intent(this, ActivityRanking.class);
+                startActivity(startActitivy);
+                break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();

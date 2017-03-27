@@ -99,7 +99,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
 
                 dialog = new ProgressDialog(ActivityBuscaEspecialidade.this);
                 dialog.setCancelable(true);
-                dialog.setMessage("Carregando");
+                dialog.setMessage("Buscando...");
                 dialog.show();
                 //Relizando a busca
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -194,7 +194,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         switch (id)
         {
             case R.id.nav_buscaLoc:
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaLocalizacao.class);
+                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
                 startActivity(startActivityBuscaLocalizacao);
                 break;
             case R.id.nav_buscaEspec:
@@ -204,6 +204,10 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
             case R.id.nav_buscaNome:
                 Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
                 startActivity(startActivityBuscaNome);
+                break;
+            case R.id.nav_Ranking:
+                Intent startActitivy = new Intent(this, ActivityRanking.class);
+                startActivity(startActitivy);
                 break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();

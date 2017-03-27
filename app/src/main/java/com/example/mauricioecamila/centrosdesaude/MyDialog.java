@@ -17,7 +17,7 @@ public class MyDialog extends Dialog {
 
     public MyDialog(Context context, String text) {
         super(context);
-        setContentView(R.layout.my_custom_dialog);
+        setContentView(R.layout.dialog_avaliacao);
 
     }
 }

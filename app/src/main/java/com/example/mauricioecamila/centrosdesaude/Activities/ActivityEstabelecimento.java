@@ -1,6 +1,7 @@
 package com.example.mauricioecamila.centrosdesaude.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -27,8 +29,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Avaliacao;
 import com.example.mauricioecamila.centrosdesaude.Adapters.AvaliacaoAdapter;
+import com.example.mauricioecamila.centrosdesaude.Avaliacao;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
 
@@ -58,6 +60,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
     private RatingBar rbAtendimento, rbEstrutura, rbEquipamentos, rbLocalização, rbTempoAtendimento;
     private ListView lvComentarios;
     private ArrayList<Avaliacao> avaliacaos;
+    private AlertDialog dialogAv;
 
 
     private TextView tvNomeEstabelecimento, tvEndereco, tvTelefone, tvTpEstabelecimento, tvAtendUrgencia, tvAtendAmbulatorial,
@@ -161,6 +164,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         btnEnviarComentario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnEnviarComentario.setEnabled(false);
                 //Relizando a inserção
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -168,18 +172,33 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
                 int idUsuario = preferences.getInt("idUsuario", 0);
                 String descComentario = etComentario.getText().toString();
+                if(etComentario.getText().toString().trim().isEmpty()){
+                    AlertDialog alertDialog;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityEstabelecimento.this);
+                    builder.setMessage("O campo comentário está vazio")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
-                if(networkInfo != null && networkInfo.isConnected()){
-                    //Criar a URL
-                    url = "http://centrosdesaude.com.br/app/enviarComentario.php";
-                    parametros = "?idUsuario=" + idUsuario + "&idEstabelecimento=" +  idEstabelecimento + "&descComentario=" + descComentario;
+                                }
+                            });
+                    alertDialog = builder.create();
+                    alertDialog.show();
+                    btnEnviarComentario.setEnabled(true);
 
-                    new ActivityEstabelecimento.SolicitaDados().execute(url);
+                }else {
+                    //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        //Criar a URL
+                        url = "http://centrosdesaude.com.br/app/enviarComentario.php";
+                        parametros = "?idUsuario=" + idUsuario + "&idEstabelecimento=" + idEstabelecimento + "&descComentario=" + descComentario;
 
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+                        new ActivityEstabelecimento.SolicitaDados().execute(url);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+                        btnEnviarComentario.setEnabled(true);
+                    }
                 }
                 //Fim da busca
             }
@@ -198,6 +217,11 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
             Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
         }
         //Fim da busca
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        dialogAv = builder.create();
+        View v = getLayoutInflater().inflate(R.layout.dialog_avaliacao, null);
+        dialogAv.setView(v);
 
     }
 
@@ -245,7 +269,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         switch (id)
         {
             case R.id.nav_buscaLoc:
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaLocalizacao.class);
+                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
                 startActivity(startActivityBuscaLocalizacao);
                 break;
             case R.id.nav_buscaEspec:
@@ -253,6 +277,10 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
             case R.id.nav_buscaNome:
                 Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
                 startActivity(startActivityBuscaNome);
+                break;
+            case R.id.nav_Ranking:
+                Intent startActitivy = new Intent(this, ActivityRanking.class);
+                startActivity(startActitivy);
                 break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
@@ -332,11 +360,13 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String resultado) {
-
-            if(resultado.contains("OK")){
+            if(resultado.contains("Comentário enviado com sucesso")){
+                etComentario.setText("");
                 Toast.makeText(getApplicationContext(),"Comentário enviado com sucesso", Toast.LENGTH_SHORT).show();
+                btnEnviarComentario.setEnabled(true);
             }
-            else if(resultado.contains("ERRO")){
+            else if(resultado.contains("Erro ao enviar o comentário")){
+                btnEnviarComentario.setEnabled(true);
                 Toast.makeText(getApplicationContext(),"Ocorreu um erro ao enviar o comentário", Toast.LENGTH_SHORT).show();
             }
         }

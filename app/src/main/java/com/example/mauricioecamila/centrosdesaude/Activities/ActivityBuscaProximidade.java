@@ -42,7 +42,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ActivityBuscaLocalizacao extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ActivityBuscaProximidade extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private Button botaoBuscaLocalizacao;
@@ -79,7 +79,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
         Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
         botaoBuscaLocalizacao = (Button) findViewById(R.id.botaoBuscaLocalizacao);
 
-        GPSTracker gps = new GPSTracker(ActivityBuscaLocalizacao.this);
+        GPSTracker gps = new GPSTracker(ActivityBuscaProximidade.this);
         if(gps.canGetLocation()){
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
@@ -99,7 +99,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
         botaoBuscaLocalizacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new ProgressDialog(ActivityBuscaLocalizacao.this);
+                dialog = new ProgressDialog(ActivityBuscaProximidade.this);
                 dialog.setCancelable(true);
                 dialog.setMessage("Carregando");
                 dialog.show();
@@ -118,7 +118,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
                         url = "http://centrosdesaude.com.br/app/buscaLocalizacao.php";
                         //url = "http://localhost:8090/login/logar.php";
                         parametros = "?lat=" + latitude + "&lng=" + longitude + "&km=" +km;
-                        new ActivityBuscaLocalizacao.SolicitaDados().execute(url);
+                        new ActivityBuscaProximidade.SolicitaDados().execute(url);
 
                 }
                 else{
@@ -168,7 +168,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
         {
             case R.id.nav_buscaLoc:
                 //ShowFragment(new FragmentoMapa(), "FragmentoMapa");
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaLocalizacao.class);
+                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
                 startActivity(startActivityBuscaLocalizacao);
                 break;
             case R.id.nav_buscaEspec:
@@ -180,9 +180,10 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
                 Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
                 startActivity(startActivityBuscaNome);
                 break;
-            /*case R.id.nav_ExemploProvider:
-                ShowFragment(new ExemploProviderFragmentV1(), "ExemploProviderFragmentV1");
-                break;*/
+            case R.id.nav_Ranking:
+                Intent startActitivy = new Intent(this, ActivityRanking.class);
+                startActivity(startActitivy);
+                break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
@@ -305,7 +306,7 @@ public class ActivityBuscaLocalizacao extends AppCompatActivity implements Navig
                         System.out.println(nmLogradouro);*/
                     }
 
-                    ArrayAdapter adaptador = new EstabelecimentoAdapter(ActivityBuscaLocalizacao.this,estabelecimentos);
+                    ArrayAdapter adaptador = new EstabelecimentoAdapter(ActivityBuscaProximidade.this,estabelecimentos);
                     listView.setAdapter(adaptador);
                     dialog.dismiss();
                 }catch (Exception e){

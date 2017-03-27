@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.example.mauricioecamila.centrosdesaude.FragmentoMapaProvider;
+import com.example.mauricioecamila.centrosdesaude.Framentos.FragmentoMapaProvider;
 import com.example.mauricioecamila.centrosdesaude.R;
 
 public class ActivityMapa extends AppCompatActivity
