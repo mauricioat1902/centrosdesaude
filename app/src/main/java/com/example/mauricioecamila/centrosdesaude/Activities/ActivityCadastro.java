@@ -1,5 +1,6 @@
 package com.example.mauricioecamila.centrosdesaude.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -32,6 +33,7 @@ public class ActivityCadastro extends AppCompatActivity {
     private String parametros = "";
     private RadioGroup radioGroupSexo;
     private Button botaoCancelar;
+    private ProgressDialog dialog;
 
 
     @Override
@@ -39,7 +41,6 @@ public class ActivityCadastro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-        //Typeface custom_font = Typeface.createFromAsset(getAssets(),"assets/Lato-Light.ttf");
 
         cadNome = (EditText) findViewById(R.id.cadNome);
         cadEmail = (EditText) findViewById(R.id.cadEmail);
@@ -62,17 +63,25 @@ public class ActivityCadastro extends AppCompatActivity {
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                dialog = new ProgressDialog(ActivityCadastro.this);
+                dialog.setCancelable(true);
+                dialog.setMessage("Cadastrando");
+                dialog.show();
                 //Verifica o estado da rede e conexão
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
                 if(networkInfo != null && networkInfo.isConnected()){
                     String nome = cadNome.getText().toString().trim();
-                    String sobreNome = cadSobrenome.getText().toString().trim();
+                    String sobrenome = cadSobrenome.getText().toString().trim();
                     String email = cadEmail.getText().toString().trim();
                     String senha = cadSenha.getText().toString().trim();
                     String dtNascimento = cadDataNascimento.getText().toString().trim();
                     String telefone = cadTel.getText().toString().trim();
+                    telefone = telefone.replaceAll("-","");
+                    telefone = telefone.replace("(","");
+                    telefone = telefone.replace(")","");
                     String sexo = "";
 
                     switch (radioGroupSexo.getCheckedRadioButtonId()){
@@ -85,21 +94,22 @@ public class ActivityCadastro extends AppCompatActivity {
 
                     }
                     //Verifica se há campos sem estar preenchidos
-                    if(email.isEmpty() || sobreNome.isEmpty() || senha.isEmpty() || nome.isEmpty() ||
+                    if(email.isEmpty() || sobrenome.isEmpty() || senha.isEmpty() || nome.isEmpty() ||
                             dtNascimento.isEmpty() || telefone.isEmpty() || sexo.isEmpty()){
                         Toast.makeText(getApplicationContext(), "Nenhum campo pode estar vazio", Toast.LENGTH_LONG).show();
                     }
 
                     else{
                         //Criar a URL
-                        url = "http://192.168.0.31:8090/login/registrar.php";
-                        //url = "http://localhost:8090/login/logar.php";
-                        parametros = "?nome=" + nome + "email=" + email + "&senha=" + senha;
+                        url = "http://192.168.0.31:8090/cadastrar.php";
+                        parametros = "?nome=" + nome + "&sobrenome=" + sobrenome + "&email=" + email + "&dtNascimento=" + dtNascimento +
+                                "&sexo=" + sexo + "&senha=" + senha + "&telefone=" + telefone;
                         new SolicitaDados().execute(url);
                     }
 
                 }
                 else{
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
                 }
             }
@@ -129,15 +139,18 @@ public class ActivityCadastro extends AppCompatActivity {
         @Override
         protected void onPostExecute(String resultado) {
 
-            if(resultado.contains("email_erro")){
+            if(resultado.contains("ERRO")){
+                dialog.dismiss();
                 Toast.makeText(getApplicationContext(),"Este email já está cadastrado", Toast.LENGTH_SHORT).show();
             }
-            else if(resultado.contains("registro_ok")){
+            else if(resultado.contains("OK")){
+                dialog.dismiss();
                 Toast.makeText(getApplicationContext(),"Cadastro concluído com sucesso", Toast.LENGTH_SHORT).show();
-                Intent abrePrincipal = new Intent(ActivityCadastro.this, ActivityLogin.class);
-                startActivity(abrePrincipal);
+                Intent abreLogin = new Intent(ActivityCadastro.this, ActivityLogin.class);
+                startActivity(abreLogin);
             }
             else{
+                dialog.dismiss();
                 Toast.makeText(getApplicationContext(),"Ocorreu um erro ao cadastrar", Toast.LENGTH_SHORT).show();
             }
         }

@@ -62,10 +62,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityLogin" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -96,7 +94,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ActivityInicial" />
+        <activity android:name=".Activities.ActivityInicial">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityInicial" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.ActivityBuscaEspecialidade"
             android:label="Busca por Especialidade"
@@ -110,6 +114,8 @@
             android:name=".Activities.ActivityRanking"
             android:label="@string/title_activity_ranking"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
     </application>
 
 </manifest>

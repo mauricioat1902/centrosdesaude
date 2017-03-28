@@ -103,8 +103,6 @@ public class ActivityPrincipal extends AppCompatActivity
                 });
                 alertDialog = builder.create();
                 alertDialog.show();
-                /*Intent it = new Intent(ActivityPrincipal.this, ActivityBuscaNome.class);
-                startActivity(it);*/
             }
         });
 
@@ -189,7 +187,6 @@ public class ActivityPrincipal extends AppCompatActivity
         switch (id)
         {
             case R.id.nav_buscaLoc:
-                //ShowFragment(new FragmentoMapa(), "FragmentoMapa");
                 Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
                 startActivity(startActivityBuscaLocalizacao);
                 break;
@@ -198,7 +195,6 @@ public class ActivityPrincipal extends AppCompatActivity
                 startActivity(startActivityBuscaEspec);
                 break;
             case R.id.nav_buscaNome:
-                //ShowFragment(new FragmentoBuscaNome(), "FragmentoBuscaNome");
                 Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
                 startActivity(startActivityBuscaNome);
                 break;
