@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,23 +37,26 @@ public class FragmentoRankingCategoria extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragmento_rank_categoria,container,false);
         dialog = new ProgressDialog(getActivity());
         dialog.setCancelable(true);
         dialog.setMessage("Carregando");
         dialog.show();
-        rvRankCategoria = (RecyclerView)getActivity().findViewById(R.id.rvRankCategoria);
+        rvRankCategoria = (RecyclerView)view.findViewById(R.id.rvRankCategoria);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
+        rvRankCategoria.setLayoutManager(layoutManager);
         ConnectivityManager connMgr = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()) {
             //Criar a URL
-            url = "http://centrosdesaude.com.br/rankingGeral.php";
+            url = "http://centrosdesaude.com.br/app/rankingGeral.php";
             //url = "http://localhost:8090/login/logar.php";
             parametros = "";
             new FragmentoRankingCategoria.SolicitaDados().execute(url);
         }else{
             Toast.makeText(getActivity(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
         }
-        return inflater.inflate(R.layout.fragmento_rank_categoria,container,false);
+        return view;
     }
 
 
@@ -73,7 +77,7 @@ public class FragmentoRankingCategoria extends Fragment{
 
             if(resultado.contains("Erro Conexao:")){
                 dialog.dismiss();
-                Toast.makeText(getActivity(),"Erro no retorno", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Erro no retorno: " + resultado, Toast.LENGTH_LONG).show();
             }
             else {
                 if (!resultado.isEmpty()) {
