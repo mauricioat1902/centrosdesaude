@@ -54,7 +54,7 @@ public class ActivityRanking extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_especialidade);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_ranking);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

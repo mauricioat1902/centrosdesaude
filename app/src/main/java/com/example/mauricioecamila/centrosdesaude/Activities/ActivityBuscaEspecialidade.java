@@ -122,7 +122,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                         }
                         else {
                             //Criar a URL
-                            url = "http://centrosdesaude.com.br/buscaNome.php";
+                            url = "http://centrosdesaude.com.br/app/buscaNome.php";
                             //url = "http://localhost:8090/login/logar.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado;
                             new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
@@ -267,7 +267,8 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
 
             if(resultado.contains("Erro Conexao:")){
                 dialog.dismiss();
-                Toast.makeText(getApplicationContext(),"Erro no retorno da busca", Toast.LENGTH_LONG).show();
+                System.out.println("RESULTADO: " + resultado);
+                Toast.makeText(getApplicationContext(),"Erro no retorno da busca" + resultado, Toast.LENGTH_LONG).show();
             }
             else {
                 if (!resultado.isEmpty()) {

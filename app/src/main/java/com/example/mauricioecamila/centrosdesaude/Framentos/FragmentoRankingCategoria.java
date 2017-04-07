@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapterRV;
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoRankAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.R;
@@ -123,16 +123,16 @@ public class FragmentoRankingCategoria extends Fragment{
                             e.setMdEquipamentos(mediaEquipamentos);
                             e.setMdLocalizacao(mediaLocalizacao);
                             e.setMdTempoAtendimento(mediaTempoAtendimento);
+                            e.setPosicaoRank(i+1);
 
                             estabelecimentos.add(e);
                         }
 
-                        EstabelecimentoAdapterRV adapter = new EstabelecimentoAdapterRV(getActivity(),estabelecimentos);
+                        EstabelecimentoRankAdapter adapter = new EstabelecimentoRankAdapter(getActivity(),estabelecimentos);
                         rvRankCategoria.setAdapter(adapter);
                         dialog.dismiss();
                     } catch (Exception e) {
                         dialog.dismiss();
-                        System.out.print(e.toString());
                     }
                 } else {
                     dialog.dismiss();

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.mauricioecamila.centrosdesaude.Activities.ActivityBuscaProximidade"
-    tools:showIn="@layout/app_bar_activity_busca_localizacao"
+    tools:showIn="@layout/app_bar_activity_busca_proximidade"
     android:orientation="vertical">
 
     <LinearLayout

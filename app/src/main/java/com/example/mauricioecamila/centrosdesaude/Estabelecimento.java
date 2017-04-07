@@ -18,6 +18,7 @@ public class Estabelecimento {
     private String latitude, longitude;
     private Double distancia;
     private Double mdAtendimento, mdEstrutura, mdEquipamentos, mdLocalizacao, mdTempoAtendimento, mdGeral;
+    private int posicaoRank;
 
 
 
@@ -276,5 +277,13 @@ public class Estabelecimento {
 
     public void setMdTempoAtendimento(Double mdTempoAtendimento) {
         this.mdTempoAtendimento = mdTempoAtendimento;
+    }
+
+    public int getPosicaoRank() {
+        return posicaoRank;
+    }
+
+    public void setPosicaoRank(int posicaoRank) {
+        this.posicaoRank = posicaoRank;
     }
 }

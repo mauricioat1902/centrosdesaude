@@ -291,7 +291,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 startActivity(startActivityLogin);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_localizacao);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_proximidade);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapterRV;
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoRankAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.R;
@@ -63,7 +63,6 @@ public class FragmentoRankingGeral extends Fragment{
         if (networkInfo != null && networkInfo.isConnected()) {
             //Criar a URL
             url = "http://centrosdesaude.com.br/app/rankingGeral.php";
-            //url = "http://localhost:8090/login/logar.php";
             parametros = "";
             new FragmentoRankingGeral.SolicitaDados().execute(url);
         } else {
@@ -134,17 +133,15 @@ public class FragmentoRankingGeral extends Fragment{
                             e.setMdEquipamentos(mediaEquipamentos);
                             e.setMdLocalizacao(mediaLocalizacao);
                             e.setMdTempoAtendimento(mediaTempoAtendimento);
-
+                            e.setPosicaoRank(i+1);
                             estabelecimentos.add(e);
                         }
 
-                        EstabelecimentoAdapterRV adapter = new EstabelecimentoAdapterRV(getActivity(),estabelecimentos);
+                        EstabelecimentoRankAdapter adapter = new EstabelecimentoRankAdapter(getActivity(),estabelecimentos);
                         rvRankGeral.setAdapter(adapter);
                         dialog.dismiss();
                     } catch (Exception e) {
                         dialog.dismiss();
-                        System.out.print(e.toString());
-                        Toast.makeText(getActivity(), "Erro ao carregar RecycleView: " + e.toString(), Toast.LENGTH_LONG).show();
                     }
                 } else {
                     dialog.dismiss();

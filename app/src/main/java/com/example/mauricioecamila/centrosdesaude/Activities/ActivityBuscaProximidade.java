@@ -61,12 +61,12 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_busca_localizacao);
+        setContentView(R.layout.activity_busca_proximidade);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarBuscaLocalizacao);
         setSupportActionBar(toolbar);
 
         //Aqui está chamando o menu lateral
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_localizacao);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_proximidade);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -193,7 +193,7 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
                 startActivity(startActivityLogin);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_localizacao);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_proximidade);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -206,6 +206,16 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_proximidade);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
