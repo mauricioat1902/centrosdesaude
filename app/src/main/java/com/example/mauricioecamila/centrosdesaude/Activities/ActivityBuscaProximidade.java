@@ -58,6 +58,7 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
     private String parametros = "";
     private double latitude = 0;
     private double longitude = 0;
+    GPSTracker gps;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +80,7 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
         Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
         botaoBuscaLocalizacao = (Button) findViewById(R.id.botaoBuscaLocalizacao);
 
-        GPSTracker gps = new GPSTracker(ActivityBuscaProximidade.this);
+        gps = new GPSTracker(ActivityBuscaProximidade.this);
         if(gps.canGetLocation()){
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
@@ -99,33 +100,38 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
         botaoBuscaLocalizacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new ProgressDialog(ActivityBuscaProximidade.this);
-                dialog.setCancelable(true);
-                dialog.setMessage("Carregando");
-                dialog.show();
-                if(etRaioBusca.getText().toString().trim().length() > 0){
-                    km = Integer.parseInt(etRaioBusca.getText().toString());
-                }else{
-                    km = 5;
-                }
 
-                //Relizando a busca
-                ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
-                if(networkInfo != null && networkInfo.isConnected()){
+                if(!gps.canGetLocation()){
+                    Toast.makeText(getApplicationContext(), "GPS desativado. Ative-o para que possa realizar a busca.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    dialog = new ProgressDialog(ActivityBuscaProximidade.this);
+                    dialog.setCancelable(true);
+                    dialog.setMessage("Buscando...");
+                    dialog.show();
+                    if (etRaioBusca.getText().toString().trim().length() > 0) {
+                        km = Integer.parseInt(etRaioBusca.getText().toString());
+                    } else {
+                        km = 5;
+                    }
+
+                    //Relizando a busca
+                    ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                    //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
+                    if (networkInfo != null && networkInfo.isConnected()) {
                         //Criar a URL
                         url = "http://centrosdesaude.com.br/app/buscaLocalizacao.php";
                         //url = "http://localhost:8090/login/logar.php";
-                        parametros = "?lat=" + latitude + "&lng=" + longitude + "&km=" +km;
+                        parametros = "?lat=" + latitude + "&lng=" + longitude + "&km=" + km;
                         new ActivityBuscaProximidade.SolicitaDados().execute(url);
 
+                    } else {
+                        dialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+                    }
+                    //Fim da busca
                 }
-                else{
-                    dialog.dismiss();
-                    Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
-                }
-                //Fim da busca
             }
         });
 
@@ -163,34 +169,36 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Intent startActivity;
         switch (id)
         {
             case R.id.nav_buscaLoc:
-                //ShowFragment(new FragmentoMapa(), "FragmentoMapa");
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
-                startActivity(startActivityBuscaLocalizacao);
+                startActivity = new Intent(this, ActivityBuscaProximidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaEspec:
-                Intent startActivityBuscaEspec = new Intent(this, ActivityBuscaEspecialidade.class);
-                startActivity(startActivityBuscaEspec);
+                startActivity = new Intent(this, ActivityBuscaEspecialidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaNome:
-                //ShowFragment(new FragmentoBuscaNome(), "FragmentoBuscaNome");
-                Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
-                startActivity(startActivityBuscaNome);
+                startActivity = new Intent(this, ActivityBuscaNome.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_Ranking:
-                Intent startActitivy = new Intent(this, ActivityRanking.class);
-                startActivity(startActitivy);
+                startActivity = new Intent(this, ActivityRanking.class);
+                startActivity(startActivity);
+                break;
+            case R.id.nav_home:
+                startActivity = new Intent(this, ActivityPrincipal.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                Intent startActivityLogin = new Intent(this, ActivityLogin.class);
-                startActivity(startActivityLogin);
+                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity(startActivity);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_proximidade);

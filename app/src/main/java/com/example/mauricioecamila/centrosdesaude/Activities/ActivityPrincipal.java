@@ -72,7 +72,6 @@ public class ActivityPrincipal extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-
                 ArrayList<String> itens1 = new ArrayList<String>();
                 itens1.add("Buscar por Proximidade");
                 itens1.add("Buscar por Especialidade");

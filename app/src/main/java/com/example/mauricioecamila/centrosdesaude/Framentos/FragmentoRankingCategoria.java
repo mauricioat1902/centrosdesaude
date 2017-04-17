@@ -13,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoRankAdapter;
@@ -34,28 +37,66 @@ public class FragmentoRankingCategoria extends Fragment{
     private ArrayList<Estabelecimento> estabelecimentos;
     private ProgressDialog dialog;
 
+    private String[] estados = new String[]{"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT",
+            "MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"};
+    private String[] categorias = new String[]{"Atendimento","Estrutura","Equipamentos","Localização","Tempo de Atendimento"};
+    private Spinner spnRankEstado, spnRankCategoria;
+
+    private Button btnRankFiltrar;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragmento_rank_categoria,container,false);
-        dialog = new ProgressDialog(getActivity());
-        dialog.setCancelable(true);
-        dialog.setMessage("Carregando");
-        dialog.show();
         rvRankCategoria = (RecyclerView)view.findViewById(R.id.rvRankCategoria);
+        //Preenchendo o spinners
+        ArrayAdapter<String> adpEstados = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,estados);
+        adpEstados.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnRankEstado = (Spinner)view.findViewById(R.id.spnRankEstado);
+        spnRankEstado.setAdapter(adpEstados);
+        spnRankEstado.setSelection(24,false);
+
+        ArrayAdapter<String> adpCategoria = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,categorias);
+        adpCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnRankCategoria = (Spinner)view.findViewById(R.id.spnRankCategoria);
+        spnRankCategoria.setAdapter(adpCategoria);
+        spnRankCategoria.setSelection(0,false);
+
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         rvRankCategoria.setLayoutManager(layoutManager);
-        ConnectivityManager connMgr = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()) {
-            //Criar a URL
-            url = "http://centrosdesaude.com.br/app/rankingGeral.php";
-            //url = "http://localhost:8090/login/logar.php";
-            parametros = "";
-            new FragmentoRankingCategoria.SolicitaDados().execute(url);
-        }else{
-            Toast.makeText(getActivity(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
-        }
+
+        btnRankFiltrar = (Button)view.findViewById(R.id.btnRankFiltrar);
+        btnRankFiltrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog = new ProgressDialog(getActivity());
+                dialog.setCancelable(true);
+                dialog.setMessage("Carregando");
+                dialog.show();
+
+                ConnectivityManager connMgr = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                if(networkInfo != null && networkInfo.isConnected()) {
+                    String categoria = spnRankCategoria.getSelectedItem().toString();
+                    String estado = spnRankEstado.getSelectedItem().toString();
+
+                    if(categoria == "Localização")
+                        categoria = "Localizacao";
+                    else if(categoria == "Tempo de Atendimento")
+                        categoria = "TempoAtendimento";
+
+                    //Criar a URL
+                    url = "http://centrosdesaude.com.br/app/rankingCategoria.php";
+                    parametros = "?categoria= " + categoria + "&estado= " + estado;
+                    new FragmentoRankingCategoria.SolicitaDados().execute(url);
+                }else{
+                    Toast.makeText(getActivity(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         return view;
     }
 

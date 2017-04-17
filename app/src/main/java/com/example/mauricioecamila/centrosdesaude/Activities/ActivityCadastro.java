@@ -101,7 +101,7 @@ public class ActivityCadastro extends AppCompatActivity {
 
                     else{
                         //Criar a URL
-                        url = "http://192.168.0.31:8090/cadastrar.php";
+                        url = "http://centrosdesaude.com.br/app/cadastrar.php";
                         parametros = "?nome=" + nome + "&sobrenome=" + sobrenome + "&email=" + email + "&dtNascimento=" + dtNascimento +
                                 "&sexo=" + sexo + "&senha=" + senha + "&telefone=" + telefone;
                         new SolicitaDados().execute(url);

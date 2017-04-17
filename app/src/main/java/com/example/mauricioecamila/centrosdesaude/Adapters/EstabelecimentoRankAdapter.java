@@ -54,8 +54,6 @@ public class EstabelecimentoRankAdapter extends RecyclerView.Adapter<Estabelecim
             myViewHolder.imgMedalha.setImageResource(R.drawable.medalha_prata);
         }else if(estabelecimentos.get(position).getPosicaoRank() == 3){
             myViewHolder.imgMedalha.setImageResource(R.drawable.medalha_bronze);
-        }else{
-            myViewHolder.imgMedalha.setImageResource(R.drawable.medalha_outros);
         }
 
 

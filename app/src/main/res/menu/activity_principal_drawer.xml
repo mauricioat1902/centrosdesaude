@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_buscaLoc"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="Busca por Localização" />
+            android:title="Busca por Proximidade" />
         <item
             android:id="@+id/nav_buscaEspec"
             android:icon="@drawable/ic_search_black_24dp"
@@ -16,7 +16,7 @@
             android:title="Busca por nome da unidade"/>
         <item
             android:id="@+id/nav_Ranking"
-            android:icon="@drawable/ic_search_black_24dp"
+            android:icon="@drawable/ic_format_list_numbered_black_24dp"
             android:title="Ranking"/>
 
     </group>
@@ -24,8 +24,12 @@
     <item android:title="">
         <menu>
             <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_home_black_24dp"
+                android:title="Home" />
+            <item
                 android:id="@+id/nav_sair"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_power_settings_new_black_24dp"
                 android:title="Sair" />
         </menu>
     </item>

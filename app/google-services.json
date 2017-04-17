@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "996264747575",
+    "project_id": "vibrant-tree-147222"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996264747575:android:ad6d86a563631b5e",
+        "android_client_info": {
+          "package_name": "com.example.mauricioecamila.centrosdesaude"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "996264747575-vl9desjndlmcf6nnj8d01tq5mrjifnro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mauricioecamila.centrosdesaude",
+            "certificate_hash": "450bddccf6de7afe2fa68fe9d60ddfdae6277da9"
+          }
+        },
+        {
+          "client_id": "996264747575-ij7bfqeuj8br26qk5qk016g939ss5hsr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrK8kcnGh4MwyhR_jXQQlr2QWoZES2eSY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

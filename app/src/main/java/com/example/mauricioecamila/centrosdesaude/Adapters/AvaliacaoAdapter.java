@@ -37,7 +37,8 @@ public class AvaliacaoAdapter extends ArrayAdapter<Avaliacao> {
 
         TextView tvNomeUsuario = (TextView)rowView.findViewById(R.id.tvNomeUsuario);
         tvNomeUsuario.setText(elementosAvalicoes.get(position).getNomeUsuario());
-
+        System.out.println("--PASSOU: " + elementosAvalicoes.get(position).getId());
+        System.out.println("--PASSOU2: " + elementosAvalicoes.get(position).getNomeUsuario());
         TextView tvData = (TextView)rowView.findViewById(R.id.tvData);
         /*Dateformat.SHORT // 03/04/10
         Dateformat.MEDIUM // 03/04/2010

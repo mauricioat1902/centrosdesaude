@@ -135,15 +135,15 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
 
         tvNomeEstabelecimento.setText(nome);
         tvEndereco.setText(logradouro + ", " + numero + " " + cidade + " - " + estado);
-        tvTelefone.setText("Telefone: " + telefone);
-        tvTpEstabelecimento.setText("Tipo do Estabelecimento: " + tipoEstabelecimento);
-        tvAtendUrgencia.setText("Atendimento Urgência: " + temAtendimentoUrgencia);
-        tvAtendAmbulatorial.setText("Atendimento Ambulatorial: " + temAtendimentoAmbulatorial);
-        tvCentroCirurgico.setText("Centro Cirúrgico: " + temCentroCirurgico);
-        tvObstetra.setText("Obstetra: " + temObstetra);
-        tvNeoNatal.setText("NeoNatal: " + temNeoNatal);
-        tvDialise.setText("Diálise: " + temDialise);
-        tvturnoAtendimento.setText("Turno de Atendimento: " + turnoAtendimento);
+        tvTelefone.setText(telefone);
+        tvTpEstabelecimento.setText(tipoEstabelecimento);
+        tvAtendUrgencia.setText(temAtendimentoUrgencia);
+        tvAtendAmbulatorial.setText(temAtendimentoAmbulatorial);
+        tvCentroCirurgico.setText(temCentroCirurgico);
+        tvObstetra.setText(temObstetra);
+        tvNeoNatal.setText(temNeoNatal);
+        tvDialise.setText(temDialise);
+        tvturnoAtendimento.setText(turnoAtendimento);
 
         rbAtendimento = (RatingBar)findViewById(R.id.rbAtendimento);
         rbAtendimento.setRating(Float.parseFloat(mediadAtendimento.toString()));
@@ -201,6 +201,10 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                     }
                 }
                 //Fim da busca
+                //Reinicia activity
+                //recreate();
+                finish();
+                startActivity(getIntent());
             }
         });
         //Preencher o listview com os comentários da unidade
@@ -217,14 +221,30 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
             Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
         }
         //Fim da busca
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
         dialogAv = builder.create();
         View v = getLayoutInflater().inflate(R.layout.dialog_avaliacao, null);
         dialogAv.setView(v);
 
+        Button btn = (Button)findViewById(R.id.btnAvaliacao);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogAv.show();
+            }
+        });
+
+
     }
 
+    public void btnAvOk(View view){
+        dialogAv.dismiss();
+    }
+    public void btnAvCancel(View view){
+        dialogAv.dismiss();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -266,32 +286,39 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        Intent startActivity;
         switch (id)
         {
             case R.id.nav_buscaLoc:
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
-                startActivity(startActivityBuscaLocalizacao);
+                startActivity = new Intent(this, ActivityBuscaProximidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaEspec:
+                startActivity = new Intent(this, ActivityBuscaEspecialidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaNome:
-                Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
-                startActivity(startActivityBuscaNome);
+                startActivity = new Intent(this, ActivityBuscaNome.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_Ranking:
-                Intent startActitivy = new Intent(this, ActivityRanking.class);
-                startActivity(startActitivy);
+                startActivity = new Intent(this, ActivityRanking.class);
+                startActivity(startActivity);
+                break;
+            case R.id.nav_home:
+                startActivity = new Intent(this, ActivityPrincipal.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                Intent startActivityLogin = new Intent(this, ActivityLogin.class);
-                startActivity(startActivityLogin);
+                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity(startActivity);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_proximidade);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_estabelecimento);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

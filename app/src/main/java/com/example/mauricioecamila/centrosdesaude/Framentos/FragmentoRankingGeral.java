@@ -66,6 +66,7 @@ public class FragmentoRankingGeral extends Fragment{
             parametros = "";
             new FragmentoRankingGeral.SolicitaDados().execute(url);
         } else {
+            dialog.dismiss();
             Toast.makeText(getActivity(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
         }
     }

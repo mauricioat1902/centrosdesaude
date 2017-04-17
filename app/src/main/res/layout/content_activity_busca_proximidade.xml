@@ -14,33 +14,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:background="#60FFFFFF">
 
         <TextView
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:text="Raio de distância da busca"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="18sp" />
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.SearchResult.Title"
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/etRaioBusca"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:layout_weight="1"
+            android:background="@drawable/rect"
             android:ems="10"
+            android:hint="Km"
             android:inputType="number"
-            android:maxLength="3"/>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Km"
+            android:maxLength="3"
+            android:textAlignment="center"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -58,7 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/botao_buscar"
-            android:text="Buscar" />
+            android:text="Buscar"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout

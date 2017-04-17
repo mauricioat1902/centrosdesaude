@@ -110,45 +110,44 @@ public class ActivityBuscaNome extends AppCompatActivity
         botaoBusca.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                dialog = new ProgressDialog(ActivityBuscaNome.this);
-                dialog.setCancelable(true);
-                dialog.setMessage("Carregando");
-                dialog.show();
-                //Relizando a busca
-                ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
-                if(networkInfo != null && networkInfo.isConnected()){
-                    String nomeEstabelecimento = editText.getText().toString();
-                    String estado = spnEstados.getSelectedItem().toString();
-                    //Verifica se há algo no email e senha
-                    if(nomeEstabelecimento.isEmpty()){
-                        Toast.makeText(getApplicationContext(), "O campo de pesquisa está vazio", Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        if(gps.canGetLocation()){
+                String nomeEstabelecimento = editText.getText().toString();
+                if(nomeEstabelecimento.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "O campo de pesquisa está vazio", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    dialog = new ProgressDialog(ActivityBuscaNome.this);
+                    dialog.setCancelable(true);
+                    dialog.setMessage("Buscando...");
+                    dialog.show();
+                    //Relizando a busca
+                    ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                    //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        String estado = spnEstados.getSelectedItem().toString();
+                        //Verifica se há algo no email e senha
+
+                        if (gps.canGetLocation()) {
                             latitude = gps.getLatitude();
                             longitude = gps.getLongitude();
                             url = "http://centrosdesaude.com.br/app/buscaNomeGPS.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado + "&lat=" + latitude + "&lng=" + longitude;
                             new SolicitaDados().execute(url);
-                        }
-                        else {
+                        } else {
                             //Criar a URL
                             url = "http://centrosdesaude.com.br/app/buscaNome.php";
                             //url = "http://localhost:8090/login/logar.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado;
                             new SolicitaDados().execute(url);
                         }
+
+
+                    } else {
+                        dialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
                     }
-
+                    //Fim da busca
                 }
-                else{
-                    dialog.dismiss();
-                    Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
-                }
-                //Fim da busca
-
             }//OnClick
         });//setOnclickListener
     }//onCreate
@@ -210,34 +209,36 @@ public class ActivityBuscaNome extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Intent startActivity;
         switch (id)
         {
             case R.id.nav_buscaLoc:
-                //ShowFragment(new FragmentoMapa(), "FragmentoMapa");
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
-                startActivity(startActivityBuscaLocalizacao);
+                startActivity = new Intent(this, ActivityBuscaProximidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaEspec:
-                Intent startActivityBuscaEspec = new Intent(this, ActivityBuscaEspecialidade.class);
-                startActivity(startActivityBuscaEspec);
+                startActivity = new Intent(this, ActivityBuscaEspecialidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaNome:
-                //ShowFragment(new FragmentoBuscaNome(), "FragmentoBuscaNome");
-                Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
-                startActivity(startActivityBuscaNome);
+                startActivity = new Intent(this, ActivityBuscaNome.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_Ranking:
-                Intent startActitivy = new Intent(this, ActivityRanking.class);
-                startActivity(startActitivy);
+                startActivity = new Intent(this, ActivityRanking.class);
+                startActivity(startActivity);
+                break;
+            case R.id.nav_home:
+                startActivity = new Intent(this, ActivityPrincipal.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                Intent startActivityLogin = new Intent(this, ActivityLogin.class);
-                startActivity(startActivityLogin);
+                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity(startActivity);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_nome);

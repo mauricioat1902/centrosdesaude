@@ -190,35 +190,39 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Intent startActivity;
         switch (id)
         {
             case R.id.nav_buscaLoc:
-                Intent startActivityBuscaLocalizacao = new Intent(this, ActivityBuscaProximidade.class);
-                startActivity(startActivityBuscaLocalizacao);
+                startActivity = new Intent(this, ActivityBuscaProximidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaEspec:
-                Intent startActivityBuscaEspec = new Intent(this, ActivityBuscaEspecialidade.class);
-                startActivity(startActivityBuscaEspec);
+                startActivity = new Intent(this, ActivityBuscaEspecialidade.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_buscaNome:
-                Intent startActivityBuscaNome = new Intent(this, ActivityBuscaNome.class);
-                startActivity(startActivityBuscaNome);
+                startActivity = new Intent(this, ActivityBuscaNome.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_Ranking:
-                Intent startActitivy = new Intent(this, ActivityRanking.class);
-                startActivity(startActitivy);
+                startActivity = new Intent(this, ActivityRanking.class);
+                startActivity(startActivity);
+                break;
+            case R.id.nav_home:
+                startActivity = new Intent(this, ActivityPrincipal.class);
+                startActivity(startActivity);
                 break;
             case R.id.nav_sair:
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                Intent startActivityLogin = new Intent(this, ActivityLogin.class);
-                startActivity(startActivityLogin);
+                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity(startActivity);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_nome);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_especialidade);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
