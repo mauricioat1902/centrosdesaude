@@ -89,7 +89,7 @@ public class FragmentoRankingCategoria extends Fragment{
 
                     //Criar a URL
                     url = "http://centrosdesaude.com.br/app/rankingCategoria.php";
-                    parametros = "?categoria= " + categoria + "&estado= " + estado;
+                    parametros = "?categoria=" + categoria + "&estado=" + estado;
                     new FragmentoRankingCategoria.SolicitaDados().execute(url);
                 }else{
                     Toast.makeText(getActivity(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();

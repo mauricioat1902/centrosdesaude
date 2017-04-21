@@ -51,7 +51,7 @@ public class ActivityRecuperarSenha extends AppCompatActivity {
         btnRecEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                pdialog = ProgressDialog.show(context, "", "Enviando E-mail...", true);
                 //Alterando a senha
                 ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -81,7 +81,7 @@ public class ActivityRecuperarSenha extends AppCompatActivity {
 
             try{
                 Message message = new MimeMessage(session);
-                message.setFrom(new InternetAddress("testfrom354@gmail.com"));
+                message.setFrom(new InternetAddress("contato@centrosdesaude.com.br"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
                 message.setSubject(titulo);
                 message.setContent(mensagemTexto, "text/html; charset=utf-8");
@@ -118,19 +118,25 @@ public class ActivityRecuperarSenha extends AppCompatActivity {
             if(resultado.contains("OK")){
                 //Enviando o Email
                 Properties props = new Properties();
+                /*usando email do Google
                 props.put("mail.smtp.host", "smtp.gmail.com");
                 props.put("mail.smtp.socketFactory.port", "465");
                 props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
                 props.put("mail.smtp.auth", "true");
-                props.put("mail.smtp.port", "465");
+                props.put("mail.smtp.port", "465");*/
+                props.put("mail.smtp.host", "smtp.sparkpostmail.com");
+                props.put("mail.smtp.socketFactory.port", "2525");
+                props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.port", "587");
 
                 session = Session.getDefaultInstance(props, new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication("centrossaude@gmail.com", "CentrosdeSaude123");
+                        return new PasswordAuthentication("contato@centrosdesaude.com.br", "05f2f41332bd71ab936c2646455021e282b49415");
                     }
                 });
 
-                pdialog = ProgressDialog.show(context, "", "Enviando E-mail...", true);
+
 
                 RetreiveFeedTask task = new RetreiveFeedTask();
                 task.execute();

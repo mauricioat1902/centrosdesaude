@@ -26,12 +26,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapterRV;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapterRV;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
 
@@ -52,6 +53,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
     private ArrayList<Estabelecimento> estabelecimentos;
     private RecyclerView rvBuscaEspecialidade;
     private GPSTracker gps;
+    private Spinner spinEspecialidade, spinEstado, spinCidade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,11 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
         rvBuscaEspecialidade.setLayoutManager(layoutManager);
 
+        spinEspecialidade = (Spinner) findViewById(R.id.spinEspecialidade);
+        spinEstado = (Spinner) findViewById(R.id.spinEstado);
+        spinCidade = (Spinner) findViewById(R.id.spinCidade);
+
+
         btnBuscarEspec = (Button)findViewById(R.id.btnBuscarEspec);
         btnBuscarEspec.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +114,9 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                 //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
                 if(networkInfo != null && networkInfo.isConnected()){
                     String nomeEstabelecimento = "tatuape";
-                    String estado = "SP";
+                    String estado = spinEstado.getSelectedItem().toString();
+                    String cidade = spinCidade.getSelectedItem().toString();
+
                     //Verifica se há algo no email e senha
                     if(nomeEstabelecimento.isEmpty()){
                         Toast.makeText(getApplicationContext(), "O campo de pesquisa está vazio", Toast.LENGTH_LONG).show();

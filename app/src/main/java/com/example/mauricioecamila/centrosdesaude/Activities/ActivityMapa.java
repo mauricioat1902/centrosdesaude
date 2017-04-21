@@ -28,11 +28,12 @@ public class ActivityMapa extends AppCompatActivity
     private FragmentManager fragmentManager;
     private String paramLatitude;
     private String paramLongitude;
+    private String paramTituloMarcador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mapa);
+        setContentView(R.layout.app_bar_activity_mapa);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,6 +43,7 @@ public class ActivityMapa extends AppCompatActivity
         if(params!=null) {
             paramLatitude = params.getString("latitude");
             paramLongitude = params.getString("longitude");
+            paramTituloMarcador = params.getString("tituloMarcador");
         }
         ShowFragment(new FragmentoMapaProvider(), "FragmentoMapaProvider");
 
@@ -56,6 +58,7 @@ public class ActivityMapa extends AppCompatActivity
         Bundle parametros = new Bundle();
         parametros.putString("paramLatitude", paramLatitude);
         parametros.putString("paramLongitude", paramLongitude);
+        parametros.putString("paramTituloMarcador", paramTituloMarcador);
         fragment.setArguments(parametros);
 
         //Inicia uma transição para podeer iniciar, substituir ou modificar o fragmento
@@ -69,13 +72,13 @@ public class ActivityMapa extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //Aqui está chamando o menu lateral
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_estabelecimento);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_mapa);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_viewEstabelecimento);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_viewMapa);
         navigationView.setNavigationItemSelectedListener(this);
     }
 

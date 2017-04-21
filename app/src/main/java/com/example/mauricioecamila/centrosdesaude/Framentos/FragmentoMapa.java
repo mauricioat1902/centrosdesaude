@@ -1,6 +1,5 @@
-package com.example.mauricioecamila.centrosdesaude;
+package com.example.mauricioecamila.centrosdesaude.Framentos;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;

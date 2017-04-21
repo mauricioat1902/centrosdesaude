@@ -14,10 +14,6 @@ import com.example.mauricioecamila.centrosdesaude.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-/**
- * Created by Mauricio e Camila on 06/03/2017.
- */
-
 public class AvaliacaoAdapter extends ArrayAdapter<Avaliacao> {
 
     private final Context context;

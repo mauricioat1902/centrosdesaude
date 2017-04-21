@@ -102,10 +102,11 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
 
     }
 
+    //Google e Faceboook
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //callbackManager.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         System.out.println("ESTÁ EM onActivityResult");
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
@@ -114,11 +115,13 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         }
     }
 
+    //Google
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    //Google
     // [START handleSignInResult]
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
@@ -162,6 +165,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         }
     }
 
+    //Google
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
@@ -170,6 +174,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         Toast.makeText(getApplicationContext(), "onConnectionFailed: " + connectionResult, Toast.LENGTH_LONG).show();
     }
 
+    //Google
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

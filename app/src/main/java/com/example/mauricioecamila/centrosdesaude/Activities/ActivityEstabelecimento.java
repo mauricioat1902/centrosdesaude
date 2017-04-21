@@ -16,20 +16,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Adapters.AvaliacaoAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.ComentarioAvaliacaoAdapterRV;
 import com.example.mauricioecamila.centrosdesaude.Avaliacao;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
@@ -58,7 +58,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
     private EditText etComentario;
     private Double mediadAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral;
     private RatingBar rbAtendimento, rbEstrutura, rbEquipamentos, rbLocalização, rbTempoAtendimento;
-    private ListView lvComentarios;
+    private RecyclerView rvComentarios;
     private ArrayList<Avaliacao> avaliacaos;
     private AlertDialog dialogAv;
 
@@ -90,6 +90,13 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         //Pegando os parametros passado para essa Activity
         Intent intent = getIntent();
         Bundle params = intent.getExtras();
+
+        //Iniciando Recycle View
+        rvComentarios = (RecyclerView) findViewById(R.id.rvComentarios);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rvComentarios.setLayoutManager(layoutManager);
+
 
         if(params!=null) {
             idEstabelecimento = params.getLong("id");
@@ -336,7 +343,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                     TextView tvSemRetorno = (TextView)findViewById(R.id.tvSemRetorno);
                     tvSemRetorno.setText("Não há comentários desse Estabelecimento");
                 } else{
-                    lvComentarios = (ListView)findViewById(R.id.lvComentarios);
+                    rvComentarios = (RecyclerView) findViewById(R.id.rvComentarios);
                     avaliacaos = new ArrayList<Avaliacao>();
                     try{
                         JSONObject jsonObject = new JSONObject(resultado);
@@ -361,13 +368,15 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                             Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data);
                             avaliacao.setDataComentario(dt);
                             avaliacaos.add(avaliacao);
+                            System.out.println("---COMENTARIO: " + avaliacao.getId());
+                            System.out.println("---COMENTARIO: " + avaliacao.getComentario());
                         }
 
-                        ArrayAdapter adapter = new AvaliacaoAdapter(ActivityEstabelecimento.this,avaliacaos);
-                        lvComentarios.setAdapter(adapter);
+                        ComentarioAvaliacaoAdapterRV adapter = new ComentarioAvaliacaoAdapterRV(ActivityEstabelecimento.this,avaliacaos);
+                        rvComentarios.setAdapter(adapter);
 
                     }catch (Exception e){
-                        System.out.println("Erro no JSON: " + e.toString());
+                        Toast.makeText(getApplicationContext(),"Erro no JSON: " + e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

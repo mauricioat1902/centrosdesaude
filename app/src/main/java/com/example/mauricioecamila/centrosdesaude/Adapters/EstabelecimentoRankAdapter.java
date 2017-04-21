@@ -96,6 +96,24 @@ public class EstabelecimentoRankAdapter extends RecyclerView.Adapter<Estabelecim
             }
         });
 
+        myViewHolder.btnRankMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityMapa");
+                //Passando dados para a próxima Activity
+                Bundle parametros = new Bundle();
+                String resposta = estabelecimentos.get(position).getLatitude();
+                parametros.putString("latitude", resposta);
+                resposta = estabelecimentos.get(position).getLongitude();
+                parametros.putString("longitude", resposta);
+                resposta = estabelecimentos.get(position).getNome();
+                parametros.putString("tituloMarcador", resposta);
+
+                intent.putExtras(parametros);
+                context.startActivity(intent);
+            }
+        });
+
         try{
             YoYo.with(Techniques.FlipInX)
                     .duration(700)

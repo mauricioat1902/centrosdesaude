@@ -21,6 +21,7 @@ public class FragmentoMapaProvider extends SupportMapFragment implements OnMapRe
     private GoogleMap mMap;
     private static String TAG = "GPS";
     private LatLng latlong;
+    private String tituloMarcador;
 
     //Objeto responsável para trabalhar com o provider
     private LocationManager locationManager;
@@ -36,6 +37,7 @@ public class FragmentoMapaProvider extends SupportMapFragment implements OnMapRe
             lat = Double.parseDouble(parametros.getString("paramLatitude").toString());
             lng = Double.parseDouble(parametros.getString("paramLongitude").toString());
             latlong = new LatLng(lat, lng);
+            tituloMarcador = parametros.getString("paramTituloMarcador");
         }
     }
 
@@ -89,7 +91,7 @@ public class FragmentoMapaProvider extends SupportMapFragment implements OnMapRe
         //Marcador no mapa e coloca um título no marcador
         MarkerOptions marker = new MarkerOptions();
         marker.position(latlong);
-        marker.title("Título do Marcador");
+        marker.title(tituloMarcador);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.addMarker(marker);
         //Esse método move a camera para o local definido na coordenada

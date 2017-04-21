@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.mauricioecamila.centrosdesaude.Activities.ActivityBuscaEspecialidade">
+    tools:context="com.example.mauricioecamila.centrosdesaude.Activities.ActivityMapa">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarBuscaEspecialidade"
+            android:id="@+id/toolbarMapa"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#277A9A"
@@ -21,7 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_activity_busca_especialidade" />
-
+    <include layout="@layout/content_activity_mapa" />
 
 </android.support.design.widget.CoordinatorLayout>
