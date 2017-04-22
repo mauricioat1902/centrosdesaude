@@ -197,7 +197,7 @@ public class ActivityBuscaProximidade extends AppCompatActivity implements Navig
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity = new Intent(this, ActivityInicial.class);
                 startActivity(startActivity);
         }
 

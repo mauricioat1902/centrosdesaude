@@ -98,6 +98,8 @@ public class EstabelecimentoAdapterRV extends RecyclerView.Adapter<Estabelecimen
                 parametros.putString("latitude", resposta);
                 resposta = estabelecimentos.get(position).getLongitude();
                 parametros.putString("longitude", resposta);
+                resposta = estabelecimentos.get(position).getNome();
+                parametros.putString("tituloMarcador", resposta);
 
                 intent.putExtras(parametros);
                 context.startActivity(intent);

@@ -32,15 +32,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapter;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 public class ActivityBuscaNome extends AppCompatActivity
@@ -119,6 +120,7 @@ public class ActivityBuscaNome extends AppCompatActivity
                     dialog.setCancelable(true);
                     dialog.setMessage("Buscando...");
                     dialog.show();
+                    nomeEstabelecimento = removerAcentos(nomeEstabelecimento);
                     //Relizando a busca
                     ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                     NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -237,7 +239,7 @@ public class ActivityBuscaNome extends AppCompatActivity
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity = new Intent(this, ActivityInicial.class);
                 startActivity(startActivity);
         }
 
@@ -354,5 +356,9 @@ public class ActivityBuscaNome extends AppCompatActivity
                 });
         alert = builder.create();
         alert.show();
+    }
+
+    public static String removerAcentos(String str) {
+        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 }

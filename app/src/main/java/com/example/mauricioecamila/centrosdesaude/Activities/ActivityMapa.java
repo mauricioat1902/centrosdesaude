@@ -33,9 +33,19 @@ public class ActivityMapa extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_bar_activity_mapa);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_mapa);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMapa);
         setSupportActionBar(toolbar);
+
+        //Aqui está chamando o menu lateral
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_mapa);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_viewMapa);
+        navigationView.setNavigationItemSelectedListener(this);
 
         Intent intent = getIntent();
         Bundle params = intent.getExtras();
@@ -68,18 +78,8 @@ public class ActivityMapa extends AppCompatActivity
         transaction.commit();
         //End
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMapa);
-        setSupportActionBar(toolbar);
 
-        //Aqui está chamando o menu lateral
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_mapa);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_viewMapa);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -150,12 +150,22 @@ public class ActivityMapa extends AppCompatActivity
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity = new Intent(this, ActivityInicial.class);
                 startActivity(startActivity);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_proximidade);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_mapa);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_principal);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -10,13 +10,18 @@ public class Usuario {
     private String sobreNome;
     private String email;
     private String sexo;
+    private int tipoUsuario;
 
-    public Usuario(int id, String nome, String sobreNome, String email, String sexo) {
+    public Usuario(int id, String nome, String sobreNome, String email) {
         this.id = id;
         this.nome = nome;
         this.sobreNome = sobreNome;
         this.email = email;
-        this.sexo = sexo;
+    }
+    public Usuario(String nome, String sobreNome, String email) {
+        this.nome = nome;
+        this.sobreNome = sobreNome;
+        this.email = email;
     }
 
     public int getId() {
@@ -61,5 +66,11 @@ public class Usuario {
 
     public void inserirDadosBD(String nome, String sobrenome, String email, String nomeUsuario){}
 
-    
+    public int getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(int tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
 }

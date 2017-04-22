@@ -134,7 +134,8 @@ public class ActivityLogin extends AppCompatActivity {
                         String sobrenomeUsuario = jsonArray.getJSONObject(0).getString("sobrenome");
                         String email = jsonArray.getJSONObject(0).getString("email");
                         String sexo = jsonArray.getJSONObject(0).getString("sexo");
-                        usuario = new Usuario(idUsuario,nomeUsuario,sobrenomeUsuario,email,sexo);
+                        usuario = new Usuario(idUsuario,nomeUsuario,sobrenomeUsuario,email);
+                        usuario.setSexo(sexo);
                         ArmazenarDadosLogin(usuario);
                         Intent abrePrincipal = new Intent(ActivityLogin.this, ActivityPrincipal.class);
                         startActivity(abrePrincipal);
@@ -161,7 +162,6 @@ public class ActivityLogin extends AppCompatActivity {
     public void ArmazenarDadosLogin(Usuario usuario){
         SharedPreferences settings = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("idUsuario", usuario.getId());
         editor.putString("nomeUsuario", usuario.getNome());
         editor.putString("sobrenomeUsuario", usuario.getSobreNome());
         editor.putString("emailUsuario", usuario.getEmail());

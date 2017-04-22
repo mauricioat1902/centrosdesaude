@@ -39,21 +39,22 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:layout_width="wrap_content"
+            android:id="@+id/botaoRanking"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:background="@drawable/botao_especialidades"
-            android:clickable="true"
-            android:id="@+id/botaoEspecialidades"/>
+            android:background="@drawable/botao_ranking"
+            android:clickable="true" />
+
         <LinearLayout
             android:layout_width="10dp"
             android:layout_height="wrap_content"></LinearLayout>
 
         <ImageButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:background="@drawable/botaofarmacias"/>
+            android:background="@drawable/botaofarmacias" />
     </LinearLayout>
 
 </LinearLayout>

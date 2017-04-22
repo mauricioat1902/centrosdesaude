@@ -206,12 +206,12 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                         Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
                         btnEnviarComentario.setEnabled(true);
                     }
+                    //Reinicia activity
+                    //recreate();
+                    finish();
+                    startActivity(getIntent());
                 }
                 //Fim da busca
-                //Reinicia activity
-                //recreate();
-                finish();
-                startActivity(getIntent());
             }
         });
         //Preencher o listview com os comentários da unidade
@@ -321,7 +321,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                startActivity = new Intent(this, ActivityLogin.class);
+                startActivity = new Intent(this, ActivityInicial.class);
                 startActivity(startActivity);
         }
 
@@ -368,8 +368,6 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                             Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data);
                             avaliacao.setDataComentario(dt);
                             avaliacaos.add(avaliacao);
-                            System.out.println("---COMENTARIO: " + avaliacao.getId());
-                            System.out.println("---COMENTARIO: " + avaliacao.getComentario());
                         }
 
                         ComentarioAvaliacaoAdapterRV adapter = new ComentarioAvaliacaoAdapterRV(ActivityEstabelecimento.this,avaliacaos);

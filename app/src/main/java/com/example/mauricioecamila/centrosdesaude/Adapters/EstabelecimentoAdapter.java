@@ -61,6 +61,8 @@ public class EstabelecimentoAdapter extends ArrayAdapter<Estabelecimento> {
                 parametros.putString("latitude", resposta);
                 resposta = elementos.get(position).getLongitude();
                 parametros.putString("longitude", resposta);
+                resposta = elementos.get(position).getNome();
+                parametros.putString("tituloMarcador", resposta);
 
                 intent.putExtras(parametros);
                 context.startActivity(intent);

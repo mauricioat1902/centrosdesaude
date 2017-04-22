@@ -43,7 +43,7 @@ public class ActivityPrincipal extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ImageButton botaoProcurarEstabelecimento = (ImageButton) findViewById(R.id.botaoProcurarEstabelecimento);
-        ImageButton botaoBuscaLocalizacao = (ImageButton) findViewById(R.id.botaoEspecialidades);
+        ImageButton botaoRanking = (ImageButton) findViewById(R.id.botaoRanking);
         //Aqui está chamando o menu lateral
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_principal);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -105,10 +105,10 @@ public class ActivityPrincipal extends AppCompatActivity
             }
         });
 
-        botaoBuscaLocalizacao.setOnClickListener(new View.OnClickListener() {
+        botaoRanking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(ActivityPrincipal.this, ActivityBuscaProximidade.class);
+                Intent it = new Intent(ActivityPrincipal.this, ActivityRanking.class);
                 startActivity(it);
             }
         });
@@ -139,12 +139,12 @@ public class ActivityPrincipal extends AppCompatActivity
 
         ImageView imgUser = (ImageView)findViewById(R.id.imgIconUser);
         //Verifica o sexo do usuário para setar a imagem de icone
-        if(sexoUser.contains("M")){
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
+        if(sexoUser.trim() == "F"){
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
             imgUser.setImageDrawable(drawableIconUser);
         }
         else{
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
             imgUser.setImageDrawable(drawableIconUser);
         }
 
@@ -206,7 +206,7 @@ public class ActivityPrincipal extends AppCompatActivity
                 prefsEditor.clear();
                 prefsEditor.commit();
                 this.finish();
-                Intent startActivityLogin = new Intent(this, ActivityLogin.class);
+                Intent startActivityLogin = new Intent(this, ActivityInicial.class);
                 startActivity(startActivityLogin);
         }
 

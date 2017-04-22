@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.mauricioecamila.centrosdesaude.Avaliacao;
 import com.example.mauricioecamila.centrosdesaude.R;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -38,13 +39,21 @@ public class ComentarioAvaliacaoAdapterRV extends RecyclerView.Adapter<Comentari
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
 
-        System.out.println("---ENTROU NO onBindViewHolder");
         myViewHolder.tvNomeUsuario.setText(avaliacoes.get(position).getNomeUsuario());
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         myViewHolder.tvData.setText(sdf.format(avaliacoes.get(position).getDataComentario()));
 
         myViewHolder.rbGeral.setRating(Float.parseFloat(avaliacoes.get(position).mediaAvaliacoes().toString()));
-        myViewHolder.tvComentario.setText(avaliacoes.get(position).getComentario());
+
+        String comentario2= "nao deu certo";
+        //String comentario = new String(avaliacoes.get(position).getComentario(), Charset.forName("UTF-8"));
+        try {
+            comentario2 = new String((avaliacoes.get(position).getComentario().getBytes()) ,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        myViewHolder.tvComentario.setText(comentario2);
+
         myViewHolder.rbEstruturaCom.setRating(Float.parseFloat(avaliacoes.get(position).getAvEstrutura().toString()));
         myViewHolder.rbAtendimentoCom.setRating(Float.parseFloat(avaliacoes.get(position).getAvAtendimento().toString()));
         myViewHolder.rbEquipamentosCom.setRating(Float.parseFloat(avaliacoes.get(position).getAvEquipamentos().toString()));

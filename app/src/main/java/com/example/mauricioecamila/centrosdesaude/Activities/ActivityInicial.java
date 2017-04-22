@@ -2,6 +2,7 @@ package com.example.mauricioecamila.centrosdesaude.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -10,10 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.example.mauricioecamila.centrosdesaude.Usuario;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -44,6 +47,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
+    public Usuario usuario;
 
     private String url = "";
     private String parametros = "";
@@ -51,63 +55,93 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(this);
-        setContentView(R.layout.activity_inicial);
 
-        callbackManager = CallbackManager.Factory.create();
-        facebookPermitions = Arrays.asList("email", "public_profile", "user_friends");
-        buttonFacebook = (LoginButton)findViewById(R.id.login_button_facebook);
-        buttonFacebook.setReadPermissions(facebookPermitions);
+        //Verificar se o usuário já logou antes, se já tem os dados gravados não irá para a página de login
+        if(VerificaUsuarioSalvo()){
+            //Se estiver salvo, verifica se é usuário Google, Facebook ou email
 
-        buttonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                        Toast.makeText(getApplicationContext(), "SUCESSO: " + jsonObject.toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
-                request.executeAsync();
-                Toast.makeText(getApplicationContext(), "SUCESSO!", Toast.LENGTH_LONG).show();
+            SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
+            int tipoUsuario = preferences.getInt("tipoUsuario", 0);
+            if(tipoUsuario == 2){
+                Intent abrePrincipal = new Intent(ActivityInicial.this, ActivityPrincipal.class);
+                startActivity(abrePrincipal);
+            }else if(tipoUsuario == 3){
+                //Usuário Google
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
+
+                // Build a GoogleApiClient with access to the Google Sign-In API and the
+                // options specified by gso.
+                mGoogleApiClient = new GoogleApiClient.Builder(this)
+                        .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                        .build();
+
+                signIn();
+            }else if(tipoUsuario == 4){
+                //Facebook
             }
+        }else {
 
-            @Override
-            public void onCancel() {
-                Toast.makeText(getApplicationContext(), "CANCEL!", Toast.LENGTH_LONG).show();
-            }
+            FacebookSdk.sdkInitialize(this);
+            setContentView(R.layout.activity_inicial);
 
-            @Override
-            public void onError(FacebookException e) {
-                Toast.makeText(getApplicationContext(), "ERROR! -- " + e.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        // Set the dimensions of the sign-in button.
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+            callbackManager = CallbackManager.Factory.create();
+            facebookPermitions = Arrays.asList("email", "public_profile", "user_friends");
+            buttonFacebook = (LoginButton) findViewById(R.id.login_button_facebook);
+            buttonFacebook.setReadPermissions(facebookPermitions);
 
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+            buttonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                            Toast.makeText(getApplicationContext(), "SUCESSO: " + jsonObject.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    request.executeAsync();
+                    Toast.makeText(getApplicationContext(), "SUCESSO!", Toast.LENGTH_LONG).show();
+                }
 
+                @Override
+                public void onCancel() {
+                    Toast.makeText(getApplicationContext(), "CANCEL!", Toast.LENGTH_LONG).show();
+                }
 
+                @Override
+                public void onError(FacebookException e) {
+                    Toast.makeText(getApplicationContext(), "ERROR! -- " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+            });
+            findViewById(R.id.sign_in_button).setOnClickListener(this);
+            // Set the dimensions of the sign-in button.
+            SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+            signInButton.setSize(SignInButton.SIZE_STANDARD);
+            TextView textView = (TextView) signInButton.getChildAt(0);
+            textView.setText("Login com Google");
+            // Configure sign-in to request the user's ID, email address, and basic
+            // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+
+            // Build a GoogleApiClient with access to the Google Sign-In API and the
+            // options specified by gso.
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+
+        }
     }
 
     //Google e Faceboook
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        System.out.println("ESTÁ EM onActivityResult");
+        //callbackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -128,7 +162,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            updateUI(true);
+            //updateUI(true);
             //CADASTRO DO USUÁRIO
             //Verifica o estado da rede e conexão
             ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -138,8 +172,10 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
                 String nome =  acct.getGivenName();
                 String sobreNome =  acct.getFamilyName();
                 String email =  acct.getEmail();
+                usuario = new Usuario(nome,sobreNome,email);
+                usuario.setTipoUsuario(3);
                     //Criar a URL
-                    url = "http://centrosdesaude.com.br/app/cadastrarGoogle.php";
+                    url = "http://192.168.0.31:8090/cadastrarGoogle.php";
                     //url = "http://localhost:8090/login/logar.php";
                     parametros = "?nome=" + nome + "&sobreNome=" + sobreNome +"&email=" +email;
                     new SolicitaDados().execute(url);
@@ -150,8 +186,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
 
         } else {
             // Signed out, show unauthenticated UI.
-            System.out.println("Erro handleSignInResult: " + result);
-            Toast.makeText(getApplicationContext(), "DEU RUIM: " + result, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "ERRO: " + result, Toast.LENGTH_LONG).show();
             updateUI(false);
         }
     }
@@ -203,22 +238,45 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String resultado) {
-
-            if(resultado.contains("ERRO")){
+            if(resultado.contains("email_cadastrado")){
                 //dialog.dismiss();
-                Toast.makeText(getApplicationContext(),"Este email já está cadastrado", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Este email já está cadastrado", Toast.LENGTH_SHORT).show();
+                ArmazenarDadosLogin(usuario);
+                Intent abreLogin = new Intent(ActivityInicial.this, ActivityLogin.class);
+                startActivity(abreLogin);
             }
             else if(resultado.contains("OK")){
                 //dialog.dismiss();
                 Toast.makeText(getApplicationContext(),"Cadastro concluído com sucesso", Toast.LENGTH_SHORT).show();
+                ArmazenarDadosLogin(usuario);
                 Intent abreLogin = new Intent(ActivityInicial.this, ActivityLogin.class);
                 startActivity(abreLogin);
             }
             else{
                 //dialog.dismiss();
-                Toast.makeText(getApplicationContext(),"Ocorreu um erro ao cadastrar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Ocorreu um erro ao realizar o login: " + resultado, Toast.LENGTH_SHORT).show();
             }
         }
     }//SolicitaDados
 
+
+    public void ArmazenarDadosLogin(Usuario usuario){
+        SharedPreferences settings = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("nomeUsuario", usuario.getNome());
+        editor.putString("sobrenomeUsuario", usuario.getSobreNome());
+        editor.putString("emailUsuario", usuario.getEmail());
+        editor.putString("sexoUsuario", usuario.getSexo());
+        editor.putInt("tipoUsuario", usuario.getTipoUsuario());
+        editor.commit();
+    }
+    public boolean VerificaUsuarioSalvo(){
+        //Pega os dados do usuário armezados na SharedPreferences
+        SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
+        preferences.getString("nomeUsuario", "Não encontrado");
+        if(preferences.getString("nomeUsuario", "Não encontrado") != "Não encontrado")
+            return true;
+        else
+            return false;
+    }
 }
