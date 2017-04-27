@@ -88,7 +88,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
             setContentView(R.layout.activity_inicial);
 
             callbackManager = CallbackManager.Factory.create();
-            facebookPermitions = Arrays.asList("email", "public_profile", "user_friends");
+            facebookPermitions = Arrays.asList("email", "public_profile", "user_friends", "user_about_me");
             buttonFacebook = (LoginButton) findViewById(R.id.login_button_facebook);
             buttonFacebook.setReadPermissions(facebookPermitions);
 
@@ -98,11 +98,30 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
                     GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                         @Override
                         public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                            //SUCESSO AO LOGAR COM FACEBOOK
                             Toast.makeText(getApplicationContext(), "SUCESSO: " + jsonObject.toString(), Toast.LENGTH_LONG).show();
+                            System.out.println("--optString: " + jsonObject.optString("email"));
+                            System.out.println("--optString: " + jsonObject.optString("id"));
+                            System.out.println("--optString: " + jsonObject.optString("name"));
+                            //Verificar se há um usuário com esse email, se houver irá fazer o login, se não irá cadastrar no banco
+                            new ActivityInicial().cadastrarLogarFacebook();
+                            Intent abrePrincipal = new Intent(ActivityInicial.this, ActivityPrincipal.class);
+                            startActivity(abrePrincipal);
                         }
                     });
                     request.executeAsync();
                     Toast.makeText(getApplicationContext(), "SUCESSO!", Toast.LENGTH_LONG).show();
+                    /*final AccessToken accessToken = loginResult.getAccessToken();
+                    GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+                            System.out.println("---email:" + user.optString("email"));
+                            System.out.println("---name:" +user.optString("name"));
+                            System.out.println("---id:" +user.optString("id"));
+                            System.out.println("---user_about_me:" +user.optString("user_about_me"));
+                            System.out.println("---negadas: " + AccessToken.getCurrentAccessToken().getPermissions());
+                        }
+                    }).executeAsync();*/
                 }
 
                 @Override
@@ -141,11 +160,13 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //callbackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        //Se requestCode for igual ao RC_SIGN_IN é do Google, se não é do Facebook
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+        }else{
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -160,29 +181,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            //updateUI(true);
-            //CADASTRO DO USUÁRIO
-            //Verifica o estado da rede e conexão
-            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
-            if (networkInfo != null && networkInfo.isConnected()) {
-                String nome =  acct.getGivenName();
-                String sobreNome =  acct.getFamilyName();
-                String email =  acct.getEmail();
-                usuario = new Usuario(nome,sobreNome,email);
-                usuario.setTipoUsuario(3);
-                    //Criar a URL
-                    url = "http://192.168.0.31:8090/cadastrarGoogle.php";
-                    //url = "http://localhost:8090/login/logar.php";
-                    parametros = "?nome=" + nome + "&sobreNome=" + sobreNome +"&email=" +email;
-                    new SolicitaDados().execute(url);
-
-            } else {
-                Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
-            }//FIM CADASTRO DO USUÁRIO
+            this.cadastrarLogarGoogle(result);
 
         } else {
             // Signed out, show unauthenticated UI.
@@ -278,5 +277,52 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
             return true;
         else
             return false;
+    }
+
+    private void cadastrarLogarGoogle(GoogleSignInResult result){
+        // Signed in successfully, show authenticated UI.
+        GoogleSignInAccount acct = result.getSignInAccount();
+        //updateUI(true);
+        //CADASTRO DO USUÁRIO
+        //Verifica o estado da rede e conexão
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
+        if (networkInfo != null && networkInfo.isConnected()) {
+            String nome =  acct.getGivenName();
+            String sobreNome =  acct.getFamilyName();
+            String email =  acct.getEmail();
+            usuario = new Usuario(nome,sobreNome,email);
+            usuario.setTipoUsuario(3);
+            //Criar a URL
+            url = "http://192.168.0.31:8090/cadastrarGoogle.php";
+            //url = "http://localhost:8090/login/logar.php";
+            parametros = "?nome=" + nome + "&sobreNome=" + sobreNome +"&email=" +email;
+            new SolicitaDados().execute(url);
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+        }//FIM CADASTRO DO USUÁRIO
+    }
+
+    private void cadastrarLogarFacebook(){
+        /*ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
+        if (networkInfo != null && networkInfo.isConnected()) {
+            String nome =  acct.getGivenName();
+            String sobreNome =  acct.getFamilyName();
+            String email =  acct.getEmail();
+            usuario = new Usuario(nome,sobreNome,email);
+            usuario.setTipoUsuario(3);
+            //Criar a URL
+            url = "http://192.168.0.31:8090/cadastrarGoogle.php";
+            //url = "http://localhost:8090/login/logar.php";
+            parametros = "?nome=" + nome + "&sobreNome=" + sobreNome +"&email=" +email;
+            new SolicitaDados().execute(url);
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+        }//FIM CADASTRO DO USUÁRIO*/
     }
 }
