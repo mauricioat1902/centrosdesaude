@@ -89,6 +89,7 @@ public class ActivityLogin extends AppCompatActivity {
                         //Verifica se há algo no email e senha
                         if (email.isEmpty() || senha.isEmpty()) {
                             Toast.makeText(getApplicationContext(), "Nenhum campo pode estar vazio", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
                         } else {
                             //Criar a URL
                             url = "http://centrosdesaude.com.br/app/logar.php";
@@ -99,6 +100,7 @@ public class ActivityLogin extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 }
             });
@@ -140,6 +142,7 @@ public class ActivityLogin extends AppCompatActivity {
                         Intent abrePrincipal = new Intent(ActivityLogin.this, ActivityPrincipal.class);
                         startActivity(abrePrincipal);
                     } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(),"ERRO JSON: " + e.toString(), Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                         e.printStackTrace();
                     }

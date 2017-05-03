@@ -63,6 +63,7 @@ public class FragmentoRankingGeral extends Fragment{
         if (networkInfo != null && networkInfo.isConnected()) {
             //Criar a URL
             url = "http://centrosdesaude.com.br/app/rankingGeral.php";
+            //url = "http://192.168.0.31:8090/rankingGeral.php";
             parametros = "";
             new FragmentoRankingGeral.SolicitaDados().execute(url);
         } else {

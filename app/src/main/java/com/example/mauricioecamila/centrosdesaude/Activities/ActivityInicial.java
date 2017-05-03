@@ -11,12 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
 import com.example.mauricioecamila.centrosdesaude.Usuario;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -32,6 +34,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import org.json.JSONObject;
 
@@ -48,6 +52,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
     public Usuario usuario;
+    private Button btnEntrarEmail;
 
     private String url = "";
     private String parametros = "";
@@ -62,6 +67,9 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
 
             SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
             int tipoUsuario = preferences.getInt("tipoUsuario", 0);
+            System.out.println("--preferences: " + preferences.getString("nomeUsuario", "sem nome"));
+            System.out.println("--preferences: " + preferences.getString("sobrenomeUsuario", "sem nome"));
+            System.out.println("--preferences: " + preferences.getString("emailUsuario", "sem nome"));
             if(tipoUsuario == 2){
                 Intent abrePrincipal = new Intent(ActivityInicial.this, ActivityPrincipal.class);
                 startActivity(abrePrincipal);
@@ -79,81 +87,108 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
                         .build();
 
                 signIn();
-            }else if(tipoUsuario == 4){
+            }else if(tipoUsuario == 4 && isLoggedInFacebook()){
                 //Facebook
+                finish();
+                Intent abrePrincipal = new Intent(ActivityInicial.this, ActivityPrincipal.class);
+                startActivity(abrePrincipal);
             }
-        }else {
-
-            FacebookSdk.sdkInitialize(this);
-            setContentView(R.layout.activity_inicial);
-
-            callbackManager = CallbackManager.Factory.create();
-            facebookPermitions = Arrays.asList("email", "public_profile", "user_friends", "user_about_me");
-            buttonFacebook = (LoginButton) findViewById(R.id.login_button_facebook);
-            buttonFacebook.setReadPermissions(facebookPermitions);
-
-            buttonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                            //SUCESSO AO LOGAR COM FACEBOOK
-                            Toast.makeText(getApplicationContext(), "SUCESSO: " + jsonObject.toString(), Toast.LENGTH_LONG).show();
-                            System.out.println("--optString: " + jsonObject.optString("email"));
-                            System.out.println("--optString: " + jsonObject.optString("id"));
-                            System.out.println("--optString: " + jsonObject.optString("name"));
-                            //Verificar se há um usuário com esse email, se houver irá fazer o login, se não irá cadastrar no banco
-                            new ActivityInicial().cadastrarLogarFacebook();
-                            Intent abrePrincipal = new Intent(ActivityInicial.this, ActivityPrincipal.class);
-                            startActivity(abrePrincipal);
-                        }
-                    });
-                    request.executeAsync();
-                    Toast.makeText(getApplicationContext(), "SUCESSO!", Toast.LENGTH_LONG).show();
-                    /*final AccessToken accessToken = loginResult.getAccessToken();
-                    GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject user, GraphResponse graphResponse) {
-                            System.out.println("---email:" + user.optString("email"));
-                            System.out.println("---name:" +user.optString("name"));
-                            System.out.println("---id:" +user.optString("id"));
-                            System.out.println("---user_about_me:" +user.optString("user_about_me"));
-                            System.out.println("---negadas: " + AccessToken.getCurrentAccessToken().getPermissions());
-                        }
-                    }).executeAsync();*/
-                }
-
-                @Override
-                public void onCancel() {
-                    Toast.makeText(getApplicationContext(), "CANCEL!", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onError(FacebookException e) {
-                    Toast.makeText(getApplicationContext(), "ERROR! -- " + e.toString(), Toast.LENGTH_LONG).show();
-                }
-            });
-            findViewById(R.id.sign_in_button).setOnClickListener(this);
-            // Set the dimensions of the sign-in button.
-            SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-            signInButton.setSize(SignInButton.SIZE_STANDARD);
-            TextView textView = (TextView) signInButton.getChildAt(0);
-            textView.setText("Login com Google");
-            // Configure sign-in to request the user's ID, email address, and basic
-            // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .build();
-
-            // Build a GoogleApiClient with access to the Google Sign-In API and the
-            // options specified by gso.
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build();
-
         }
+        //Limpa os dados da sharedpreference se houver algo salvo
+        //SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
+        //prefsEditor.clear();
+        //prefsEditor.commit();
+
+        FacebookSdk.sdkInitialize(this);
+        setContentView(R.layout.activity_inicial);
+
+        //Entrar com Email
+        btnEntrarEmail = (Button)findViewById(R.id.btnEntrarEmail);
+        btnEntrarEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent abreLogin = new Intent(ActivityInicial.this, ActivityLogin.class);
+                startActivity(abreLogin);
+            }
+        });
+        //Fim entrar com Email
+
+        callbackManager = CallbackManager.Factory.create();
+        facebookPermitions = Arrays.asList("email", "public_profile", "user_friends", "user_about_me");
+        buttonFacebook = (LoginButton) findViewById(R.id.login_button_facebook);
+        buttonFacebook.setReadPermissions(facebookPermitions);
+
+        //Entrar com Facebook
+        buttonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+                        //SUCESSO AO LOGAR COM FACEBOOK
+                        //Toast.makeText(getApplicationContext(), "SUCESSO: " + jsonObject.toString(), Toast.LENGTH_LONG).show();
+                        //Verificar se há um usuário com esse email, se houver irá fazer o login, se não irá cadastrar no banco
+                        //new ActivityInicial().cadastrarLogarFacebook();
+                        String nome = user.optString("name").split(" ")[0];
+                        String sobrenome = user.optString("name").split(" ")[1];
+                        Usuario usuario = new Usuario();
+                        usuario.setNome(nome);
+                        usuario.setSobreNome(sobrenome);
+                        usuario.setTipoUsuario(4);
+                        if(user.optString("email").trim() == "")
+                            usuario.setEmail("Logado com Facebook");
+                        else
+                            usuario.setEmail(user.optString("email"));
+                        ArmazenarDadosLogin(usuario);
+                        finish();
+                        Intent abrePrincipal = new Intent(ActivityInicial.this, ActivityPrincipal.class);
+                        startActivity(abrePrincipal);
+
+                    }
+                });
+                request.executeAsync();
+                //Toast.makeText(getApplicationContext(), "SUCESSO!", Toast.LENGTH_LONG).show();
+                /*final AccessToken accessToken = loginResult.getAccessToken();
+                GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+                        System.out.println("---email:" + user.optString("email"));
+                        System.out.println("---name:" +user.optString("name"));
+                        System.out.println("---id:" +user.optString("id"));
+                        System.out.println("---user_about_me:" +user.optString("user_about_me"));
+                        System.out.println("---negadas: " + AccessToken.getCurrentAccessToken().getPermissions());
+                    }
+                }).executeAsync();*/
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getApplicationContext(), "CANCEL!", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+                Toast.makeText(getApplicationContext(), "ERROR! -- " + e.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
+        // Set the dimensions of the sign-in button.
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        TextView textView = (TextView) signInButton.getChildAt(0);
+        textView.setText("Login com Google");
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     //Google e Faceboook
@@ -175,6 +210,32 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+    // [START signOut]
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        updateUI(false);
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+    // [END signOut]
+    // [START revokeAccess]
+    private void revokeAccess() {
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        updateUI(false);
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+    // [END revokeAccess]
 
     //Google
     // [START handleSignInResult]
@@ -258,6 +319,12 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         }
     }//SolicitaDados
 
+    //Se sair da tela vai fechar
+    /*@Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }*/
 
     public void ArmazenarDadosLogin(Usuario usuario){
         SharedPreferences settings = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
@@ -324,5 +391,10 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         } else {
             Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
         }//FIM CADASTRO DO USUÁRIO*/
+    }
+
+    public boolean isLoggedInFacebook() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 }

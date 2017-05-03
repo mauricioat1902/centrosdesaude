@@ -23,6 +23,9 @@ public class Usuario {
         this.sobreNome = sobreNome;
         this.email = email;
     }
+    public Usuario(){
+
+    }
 
     public int getId() {
         return id;

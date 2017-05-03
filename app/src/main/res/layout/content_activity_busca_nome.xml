@@ -51,6 +51,7 @@
             android:background="@drawable/rect"
             android:baselineAligned="false">
 
+
             <Spinner
                 android:id="@+id/spinnerEstado"
                 android:layout_width="match_parent"

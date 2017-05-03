@@ -24,19 +24,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapterRV;
+import com.example.mauricioecamila.centrosdesaude.Adapters.EspecialidadeAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
+import com.example.mauricioecamila.centrosdesaude.Especialidade;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -48,18 +55,22 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
     private String parametros = "";
     private double latitude = 0;
     private double longitude = 0;
-    private ProgressDialog dialog;
+    private ProgressDialog dialog = null;
     private Button btnBuscarEspec;
     private ArrayList<Estabelecimento> estabelecimentos;
     private RecyclerView rvBuscaEspecialidade;
     private GPSTracker gps;
-    private Spinner spinEspecialidade, spinEstado, spinCidade;
+    private Spinner spinEstado, spinCidade;
+    private AutoCompleteTextView actvEspecialidade;
+    private String[] estados = new String[]{"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT",
+            "MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"};
+    private ArrayList<Especialidade> especialidades;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busca_especialidade);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarBuscaLocalizacao);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarBuscaEspecialidade);
         setSupportActionBar(toolbar);
 
         //Aqui está chamando o menu lateral
@@ -94,9 +105,57 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
         rvBuscaEspecialidade.setLayoutManager(layoutManager);
 
-        spinEspecialidade = (Spinner) findViewById(R.id.spinEspecialidade);
         spinEstado = (Spinner) findViewById(R.id.spinEstado);
         spinCidade = (Spinner) findViewById(R.id.spinCidade);
+        especialidades = new ArrayList<Especialidade>();
+        //TODO Preencher o arraylista especialidades com os dados
+        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            dialog = new ProgressDialog(ActivityBuscaEspecialidade.this);
+            dialog.setCancelable(true);
+            dialog.setMessage("...");
+            dialog.show();
+            System.out.println("Vai chamar url");
+            url = "http://192.168.1.11:8090/especialidades.php";
+            new ActivityBuscaEspecialidade.CarregaEspecialidades().execute(url);
+        }else{
+            Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+        }
+
+        actvEspecialidade = (AutoCompleteTextView) findViewById(R.id.actvEspecialidade);
+        ArrayAdapter adapter = new EspecialidadeAdapter(this,R.layout.support_simple_spinner_dropdown_item,especialidades);
+        actvEspecialidade.setAdapter(adapter);
+
+
+
+        ArrayAdapter<String> adpEstados = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,estados);
+        adpEstados.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinEstado.setAdapter(adpEstados);
+        //Preenchendo o spinner do municipio
+        spinEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String estado = parent.getItemAtPosition(position).toString();
+                /*Conexao2 con = new Conexao2();
+                String resultJson = con.postDados("https://gist.githubusercontent.com/ografael/2037135/raw/5d31e7baaddd0d599b64c3ec04827fc244333447/estados_cidades.json");
+                System.out.println("----AQUI: " + resultJson);
+                */
+                //String url = "https://gist.githubusercontent.com/ografael/2037135/raw/5d31e7baaddd0d599b64c3ec04827fc244333447/estados_cidades.json";
+                //new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+
 
 
         btnBuscarEspec = (Button)findViewById(R.id.btnBuscarEspec);
@@ -104,45 +163,6 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                dialog = new ProgressDialog(ActivityBuscaEspecialidade.this);
-                dialog.setCancelable(true);
-                dialog.setMessage("Buscando...");
-                dialog.show();
-                //Relizando a busca
-                ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                //Se o estado da rede for diferente de nulo e a rede estiver conectada, irá executar
-                if(networkInfo != null && networkInfo.isConnected()){
-                    String nomeEstabelecimento = "tatuape";
-                    String estado = spinEstado.getSelectedItem().toString();
-                    String cidade = spinCidade.getSelectedItem().toString();
-
-                    //Verifica se há algo no email e senha
-                    if(nomeEstabelecimento.isEmpty()){
-                        Toast.makeText(getApplicationContext(), "O campo de pesquisa está vazio", Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        if(gps.canGetLocation()){
-                            latitude = gps.getLatitude();
-                            longitude = gps.getLongitude();
-                            url = "http://centrosdesaude.com.br/app/buscaNomeGPS.php";
-                            parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado + "&lat=" + latitude + "&lng=" + longitude;
-                            new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
-                        }
-                        else {
-                            //Criar a URL
-                            url = "http://centrosdesaude.com.br/app/buscaNome.php";
-                            //url = "http://localhost:8090/login/logar.php";
-                            parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado;
-                            new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
-                        }
-                    }
-
-                }
-                else{
-                    dialog.dismiss();
-                    Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
-                }
             }
         });
 
@@ -167,18 +187,21 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         navEmail = (TextView)findViewById(R.id.navEmailUsuario);
         //Pega os dados do usuário armezados na SharedPreferences
         SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
-        navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        if(preferences.getString("nomeUsuario", "Não encontrado") == "Não encontrado")
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        else
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado") + " " + preferences.getString("sobrenomeUsuario", "Não encontrado"));
         navEmail.setText(preferences.getString("emailUsuario", "Não encontrado"));
         String sexoUser = preferences.getString("sexoUsuario", "Não encontrado");
 
         ImageView imgUser = (ImageView)findViewById(R.id.imgIconUser);
         //Verifica o sexo do usuário para setar a imagem de icone
-        if(sexoUser.contains("M")){
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
+        if(sexoUser.trim() == "F"){
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
             imgUser.setImageDrawable(drawableIconUser);
         }
         else{
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
             imgUser.setImageDrawable(drawableIconUser);
         }
         return true;
@@ -226,9 +249,11 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                if(isLoggedInFacebook())
+                    LoginManager.getInstance().logOut();
                 this.finish();
-                startActivity = new Intent(this, ActivityInicial.class);
-                startActivity(startActivity);
+                Intent startActivityInicial = new Intent(this, ActivityInicial.class);
+                startActivity(startActivityInicial);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_especialidade);
@@ -263,11 +288,12 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         alert.show();
     }
 
-    public class SolicitaDados extends AsyncTask<String, Void, String> {
+    public class CarregaEspecialidades extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
 
             // params comes from the execute() call: params[0] is the url.
+            System.out.println("---POSTDADOS");
             return Conexao.postDados(urls[0],parametros);
             //} catch (IOException e) {
             //    return "Unable to download the requested page.";
@@ -277,74 +303,49 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String resultado) {
-
+            System.out.println("---ONPOSTEXECUTE");
             if(resultado.contains("Erro Conexao:")){
-                dialog.dismiss();
-                System.out.println("RESULTADO: " + resultado);
+                if(dialog != null)
+                    dialog.dismiss();
+                System.out.println("Erro Conexao: " + resultado);
                 Toast.makeText(getApplicationContext(),"Erro no retorno da busca" + resultado, Toast.LENGTH_LONG).show();
             }
-            else {
+            else if(resultado.contains("especialidades")) {
                 if (!resultado.isEmpty()) {
-
-                    estabelecimentos = new ArrayList<Estabelecimento>();
+                    especialidades = new ArrayList<Especialidade>();
                     try {
                         JSONObject jsonObject = new JSONObject(resultado);
-                        JSONArray jsonArray = jsonObject.getJSONArray("estabelecimentos");
+                        JSONArray jsonArray = jsonObject.getJSONArray("especialidades");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("idUnidade"));
-                            String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
-                            String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
-                            String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
-                            String temAtendimentoUrgencia = jsonArray.getJSONObject(i).getString("temAtendimentoUrgencia");
-                            String temAtendimentoAmbulatorial = jsonArray.getJSONObject(i).getString("temAtendimentoAmbulatorial");
-                            String temCentroCirurgico = jsonArray.getJSONObject(i).getString("temCentroCirurgico");
-                            String temObstetra = jsonArray.getJSONObject(i).getString("temObstetra");
-                            String temNeoNatal = jsonArray.getJSONObject(i).getString("temNeoNatal");
-                            String temDialise = jsonArray.getJSONObject(i).getString("temDialise");
-                            String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
-                            String numero = jsonArray.getJSONObject(i).getString("numero").toString();
-                            String bairro = jsonArray.getJSONObject(i).getString("bairro");
-                            String cidade = jsonArray.getJSONObject(i).getString("cidade");
-                            String nuCep = jsonArray.getJSONObject(i).getString("nuCep");
-                            String estado = jsonArray.getJSONObject(i).getString("estado_siglaEstado");
-                            String nuTelefone = jsonArray.getJSONObject(i).getString("nuTelefone");
-                            String turnoAtendimento = jsonArray.getJSONObject(i).getString("nmTurnoAtendimentocol");
-                            String latitude = jsonArray.getJSONObject(i).getString("lat");
-                            String longitude = jsonArray.getJSONObject(i).getString("long");
-                            Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
-                            Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
-                            Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
-                            Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
-                            Double mediaEquipamentos = jsonArray.getJSONObject(i).getDouble("mediaEquipamentos");
-                            Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
-                            Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
-
-                            Estabelecimento e = new Estabelecimento(id, nome, tipoEstabelecimento, vinculoSus, temAtendimentoUrgencia, temAtendimentoAmbulatorial,
-                                    temCentroCirurgico, temObstetra, temNeoNatal, temDialise, logradouro, numero, bairro, cidade, nuCep, estado, nuTelefone,
-                                    turnoAtendimento, latitude, longitude);
-                            e.setDistancia(distancia);
-                            e.setMdGeral(mediaGeral);
-                            e.setMdAtendimento(mediaAtendimento);
-                            e.setMdEstrutura(mediaEstrutura);
-                            e.setMdEquipamentos(mediaEquipamentos);
-                            e.setMdLocalizacao(mediaLocalizacao);
-                            e.setMdTempoAtendimento(mediaTempoAtendimento);
-
-                            estabelecimentos.add(e);
+                            int id = Integer.parseInt(jsonArray.getJSONObject(i).getString("id"));
+                            String nome = jsonArray.getJSONObject(i).getString("nome");
+                            Especialidade esp = new Especialidade(id,nome);
+                            especialidades.add(esp);
                         }
-
-                        EstabelecimentoAdapterRV adapter = new EstabelecimentoAdapterRV(ActivityBuscaEspecialidade.this,estabelecimentos);
-                        rvBuscaEspecialidade.setAdapter(adapter);
                         dialog.dismiss();
                     } catch (Exception e) {
-                        dialog.dismiss();
                         System.out.print(e.toString());
+                        dialog.dismiss();
                     }
                 } else {
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
                 }
+            }else{
+                //Executa para o spinner município
+                try {
+                    JSONObject jsonObject = new JSONObject(resultado);
+                    System.out.println("----json: " + jsonObject.getJSONArray("cidades"));
+                }catch (JSONException e){
+                    Toast.makeText(getApplicationContext(), "ERRO: " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+
             }
         }
     }//SolicitaDados
+    public boolean isLoggedInFacebook() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+
 }

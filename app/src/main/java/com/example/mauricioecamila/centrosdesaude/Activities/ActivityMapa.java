@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.example.mauricioecamila.centrosdesaude.Framentos.FragmentoMapaProvider;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 
 public class ActivityMapa extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -101,18 +103,21 @@ public class ActivityMapa extends AppCompatActivity
         navEmail = (TextView)findViewById(R.id.navEmailUsuario);
         //Pega os dados do usuário armezados na SharedPreferences
         SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
-        navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        if(preferences.getString("nomeUsuario", "Não encontrado") == "Não encontrado")
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        else
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado") + " " + preferences.getString("sobrenomeUsuario", "Não encontrado"));
         navEmail.setText(preferences.getString("emailUsuario", "Não encontrado"));
         String sexoUser = preferences.getString("sexoUsuario", "Não encontrado");
 
         ImageView imgUser = (ImageView)findViewById(R.id.imgIconUser);
         //Verifica o sexo do usuário para setar a imagem de icone
-        if(sexoUser.contains("M")){
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
+        if(sexoUser.trim() == "F"){
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
             imgUser.setImageDrawable(drawableIconUser);
         }
         else{
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
             imgUser.setImageDrawable(drawableIconUser);
         }
         return true;
@@ -149,9 +154,11 @@ public class ActivityMapa extends AppCompatActivity
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                if(isLoggedInFacebook())
+                    LoginManager.getInstance().logOut();
                 this.finish();
-                startActivity = new Intent(this, ActivityInicial.class);
-                startActivity(startActivity);
+                Intent startActivityInicial = new Intent(this, ActivityInicial.class);
+                startActivity(startActivityInicial);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_mapa);
@@ -161,11 +168,16 @@ public class ActivityMapa extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_principal);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_mapa);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
+    public boolean isLoggedInFacebook() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+
 }

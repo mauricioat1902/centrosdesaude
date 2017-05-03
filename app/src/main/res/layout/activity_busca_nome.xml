@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     android:background="@drawable/fundo">
+
     <!--Adiciona a barra nesse xml, pode ser adicionado em qualquer xml do projeto-->
     <include
         layout="@layout/app_bar_activity_busca_nome"

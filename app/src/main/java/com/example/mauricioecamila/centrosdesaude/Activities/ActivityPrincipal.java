@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
 
@@ -133,7 +135,13 @@ public class ActivityPrincipal extends AppCompatActivity
         navEmail = (TextView)findViewById(R.id.navEmailUsuario);
         //Pega os dados do usuário armezados na SharedPreferences
         SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
-        navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        System.out.println("--preferences2: " + preferences.getString("nomeUsuario", "sem nome"));
+        System.out.println("--preferences2: " + preferences.getString("sobrenomeUsuario", "sem nome"));
+        System.out.println("--preferences2: " + preferences.getString("emailUsuario", "sem nome"));
+        if(preferences.getString("nomeUsuario", "Não encontrado") == "Não encontrado")
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        else
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado") + " " + preferences.getString("sobrenomeUsuario", "Não encontrado"));
         navEmail.setText(preferences.getString("emailUsuario", "Não encontrado"));
         String sexoUser = preferences.getString("sexoUsuario", "Não encontrado");
 
@@ -205,14 +213,21 @@ public class ActivityPrincipal extends AppCompatActivity
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                if(isLoggedInFacebook())
+                    LoginManager.getInstance().logOut();
                 this.finish();
-                Intent startActivityLogin = new Intent(this, ActivityInicial.class);
-                startActivity(startActivityLogin);
+                Intent startActivity = new Intent(this, ActivityInicial.class);
+                startActivity(startActivity);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_principal);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public boolean isLoggedInFacebook() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
 

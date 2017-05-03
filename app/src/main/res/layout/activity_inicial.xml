@@ -21,59 +21,30 @@
         android:id="@+id/imageView" />
 
     <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/part_logo_2"
-        android:id="@+id/imageView2" />
+        android:paddingBottom="10dp"
+        app:srcCompat="@drawable/part_logo_2" />
 
-    <LinearLayout
+
+    <Button
+        android:id="@+id/btnEntrarEmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="#40555c5b"
-        android:orientation="horizontal">
+        android:layout_height="60dp"
+        android:backgroundTint="#363636"
+        android:drawableLeft="@drawable/email3"
+        android:text="Entrar com email"
+        android:textColor="#fff" />
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#70555c5b">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-
-                android:src="@drawable/email" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:hint="Entrar com E-mail"
-                android:inputType="text"
-                android:padding="16dp"
-                android:singleLine="true"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="14dp"
-
-                />
-        </LinearLayout>
-
-    </LinearLayout>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button_facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginStart="3dp"
         android:layout_weight="1"
         android:paddingBottom="15dp"
         android:paddingEnd="10dp"
@@ -86,7 +57,6 @@
         android:id="@+id/sign_in_button"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="20dp" />
+        android:layout_centerInParent="true" />
 
 </LinearLayout>

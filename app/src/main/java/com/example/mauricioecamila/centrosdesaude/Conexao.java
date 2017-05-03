@@ -7,9 +7,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by Mauricio e Camila on 15/11/2016.
- */
 
 public class Conexao {
     public static String postDados(String urlUsuario, String parametrosUsuario){
@@ -20,6 +17,12 @@ public class Conexao {
             url = new URL(urlUsuario+parametrosUsuario);
             //Realizar a conexão
             connection = (HttpURLConnection)url.openConnection();
+
+            //Correação do erro que retornava
+            String redirect = connection.getHeaderField("Location");
+            if(redirect !=  null)
+                connection = (HttpURLConnection) new URL(redirect).openConnection();
+            //
 
             connection.setRequestMethod("GET");
             //Tipo da informação, nesse caso está como formulário

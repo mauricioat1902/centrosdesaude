@@ -33,6 +33,8 @@ import com.example.mauricioecamila.centrosdesaude.Adapters.ComentarioAvaliacaoAd
 import com.example.mauricioecamila.centrosdesaude.Avaliacao;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -272,18 +274,21 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         navEmail = (TextView)findViewById(R.id.navEmailUsuario);
         //Pega os dados do usuário armezados na SharedPreferences
         SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
-        navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        if(preferences.getString("nomeUsuario", "Não encontrado") == "Não encontrado")
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        else
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado") + " " + preferences.getString("sobrenomeUsuario", "Não encontrado"));
         navEmail.setText(preferences.getString("emailUsuario", "Não encontrado"));
         String sexoUser = preferences.getString("sexoUsuario", "Não encontrado");
 
         ImageView imgUser = (ImageView)findViewById(R.id.imgIconUser);
         //Verifica o sexo do usuário para setar a imagem de icone
-        if(sexoUser.contains("M")){
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
+        if(sexoUser.trim() == "F"){
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
             imgUser.setImageDrawable(drawableIconUser);
         }
         else{
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
             imgUser.setImageDrawable(drawableIconUser);
         }
         return true;
@@ -320,15 +325,23 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                if(isLoggedInFacebook())
+                    LoginManager.getInstance().logOut();
                 this.finish();
-                startActivity = new Intent(this, ActivityInicial.class);
-                startActivity(startActivity);
+                Intent startActivityInicial = new Intent(this, ActivityInicial.class);
+                startActivity(startActivityInicial);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_estabelecimento);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public boolean isLoggedInFacebook() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+
 
     public class CarregaComentarios extends AsyncTask<String, Void, String> {
         @Override

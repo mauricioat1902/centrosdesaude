@@ -37,6 +37,8 @@ import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -133,12 +135,13 @@ public class ActivityBuscaNome extends AppCompatActivity
                             latitude = gps.getLatitude();
                             longitude = gps.getLongitude();
                             url = "http://centrosdesaude.com.br/app/buscaNomeGPS.php";
+                            //url = "http://192.168.0.31:8090/busca/buscaNomeGPS.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado + "&lat=" + latitude + "&lng=" + longitude;
                             new SolicitaDados().execute(url);
                         } else {
                             //Criar a URL
-                            url = "http://centrosdesaude.com.br/app/buscaNome.php";
-                            //url = "http://localhost:8090/login/logar.php";
+                            //url = "http://centrosdesaude.com.br/app/buscaNome.php";
+                            url="http://192.168.0.31:8090/busca/buscaNome.php";
                             parametros = "?nomeEstabelecimento=" + nomeEstabelecimento + "&estado=" + estado;
                             new SolicitaDados().execute(url);
                         }
@@ -179,18 +182,21 @@ public class ActivityBuscaNome extends AppCompatActivity
         navEmail = (TextView)findViewById(R.id.navEmailUsuario);
         //Pega os dados do usuário armezados na SharedPreferences
         SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
-        navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        if(preferences.getString("nomeUsuario", "Não encontrado") == "Não encontrado")
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado"));
+        else
+            navNome.setText(preferences.getString("nomeUsuario", "Não encontrado") + " " + preferences.getString("sobrenomeUsuario", "Não encontrado"));
         navEmail.setText(preferences.getString("emailUsuario", "Não encontrado"));
         String sexoUser = preferences.getString("sexoUsuario", "Não encontrado");
 
         ImageView imgUser = (ImageView)findViewById(R.id.imgIconUser);
         //Verifica o sexo do usuário para setar a imagem de icone
-        if(sexoUser.contains("M")){
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
+        if(sexoUser.trim() == "F"){
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
             imgUser.setImageDrawable(drawableIconUser);
         }
         else{
-            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_fem);
+            Drawable drawableIconUser = getResources().getDrawable(R.drawable.icon_user_masc);
             imgUser.setImageDrawable(drawableIconUser);
         }
         return true;
@@ -238,9 +244,11 @@ public class ActivityBuscaNome extends AppCompatActivity
                 SharedPreferences.Editor prefsEditor = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE).edit();
                 prefsEditor.clear();
                 prefsEditor.commit();
+                if(isLoggedInFacebook())
+                    LoginManager.getInstance().logOut();
                 this.finish();
-                startActivity = new Intent(this, ActivityInicial.class);
-                startActivity(startActivity);
+                Intent startActivityInicial = new Intent(this, ActivityInicial.class);
+                startActivity(startActivityInicial);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_busca_nome);
@@ -361,4 +369,10 @@ public class ActivityBuscaNome extends AppCompatActivity
     public static String removerAcentos(String str) {
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
+
+    public boolean isLoggedInFacebook() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+
 }
