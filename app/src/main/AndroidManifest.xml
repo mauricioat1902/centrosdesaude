@@ -110,6 +110,7 @@
             android:name=".Activities.ActivityBuscaEspecialidade"
             android:label="Busca por Especialidade"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.ActivityRecuperarSenha"

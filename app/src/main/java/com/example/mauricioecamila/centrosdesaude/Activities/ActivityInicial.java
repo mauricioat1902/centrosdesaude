@@ -136,7 +136,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
                         usuario.setSobreNome(sobrenome);
                         usuario.setTipoUsuario(4);
                         if(user.optString("email").trim() == "")
-                            usuario.setEmail("Logado com Facebook");
+                            usuario.setEmail("Login com Facebook");
                         else
                             usuario.setEmail(user.optString("email"));
                         ArmazenarDadosLogin(usuario);

@@ -34,7 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Adapters.EspecialidadeAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoRankAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
+import com.example.mauricioecamila.centrosdesaude.Conexao3;
 import com.example.mauricioecamila.centrosdesaude.Especialidade;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
@@ -66,6 +68,8 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
             "MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"};
     private ArrayList<Especialidade> especialidades;
 
+    private Especialidade especSelecionadaAutoCompleteTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +87,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_viewBuscaEspecialidade);
         navigationView.setNavigationItemSelectedListener(this);
 
-        LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        /*LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
 
         gps = new GPSTracker(ActivityBuscaEspecialidade.this);
@@ -98,7 +102,9 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         }
         if(!estaOn ){
             Toast.makeText(getApplicationContext(), "O GPS está desativado.", Toast.LENGTH_SHORT).show();
-        }
+        }*/
+
+        actvEspecialidade = (AutoCompleteTextView) findViewById(R.id.actvEspecialidade);
 
         rvBuscaEspecialidade = (RecyclerView)findViewById(R.id.rvBuscaEspecialidade);
 
@@ -114,24 +120,20 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         if(networkInfo != null && networkInfo.isConnected()){
             dialog = new ProgressDialog(ActivityBuscaEspecialidade.this);
             dialog.setCancelable(true);
-            dialog.setMessage("...");
+            dialog.setMessage("");
             dialog.show();
-            System.out.println("Vai chamar url");
-            url = "http://192.168.1.11:8090/especialidades.php";
+            url = "https://www.centrosdesaude.com.br/app/especialidades.php";
             new ActivityBuscaEspecialidade.CarregaEspecialidades().execute(url);
         }else{
             Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
         }
-
-        actvEspecialidade = (AutoCompleteTextView) findViewById(R.id.actvEspecialidade);
-        ArrayAdapter adapter = new EspecialidadeAdapter(this,R.layout.support_simple_spinner_dropdown_item,especialidades);
-        actvEspecialidade.setAdapter(adapter);
 
 
 
         ArrayAdapter<String> adpEstados = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,estados);
         adpEstados.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinEstado.setAdapter(adpEstados);
+        spinEstado.setSelection(24,false);
         //Preenchendo o spinner do municipio
         spinEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -153,15 +155,28 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         });
 
 
-
-
-
-
+        actvEspecialidade.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                especSelecionadaAutoCompleteTextView = (Especialidade) parent.getItemAtPosition(position);
+            }
+        });
 
         btnBuscarEspec = (Button)findViewById(R.id.btnBuscarEspec);
         btnBuscarEspec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO Busca da especialidade
+                int idUnidade = especSelecionadaAutoCompleteTextView.getId();
+                String estado = spinEstado.getSelectedItem().toString();
+                String municipio = "";
+                url = "http://centrosdesaude.com.br/app/buscaEspecialidades.php";
+                //url = "http://192.168.0.31:8090/rankingGeral.php";
+                parametros = "?idUnidade=" + idUnidade + "&estado=" + estado + "&municipio=" + municipio;
+                new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
+
+                System.out.println("nome da espec: " + especSelecionadaAutoCompleteTextView.getNome());
+                System.out.println("id da espec: " + especSelecionadaAutoCompleteTextView.getId());
 
             }
         });
@@ -293,8 +308,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         protected String doInBackground(String... urls) {
 
             // params comes from the execute() call: params[0] is the url.
-            System.out.println("---POSTDADOS");
-            return Conexao.postDados(urls[0],parametros);
+            return Conexao3.postDados(urls[0],parametros);
             //} catch (IOException e) {
             //    return "Unable to download the requested page.";
             //}
@@ -303,7 +317,6 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String resultado) {
-            System.out.println("---ONPOSTEXECUTE");
             if(resultado.contains("Erro Conexao:")){
                 if(dialog != null)
                     dialog.dismiss();
@@ -322,6 +335,8 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                             Especialidade esp = new Especialidade(id,nome);
                             especialidades.add(esp);
                         }
+                        ArrayAdapter adapter = new EspecialidadeAdapter(ActivityBuscaEspecialidade.this,R.layout.support_simple_spinner_dropdown_item,especialidades);
+                        actvEspecialidade.setAdapter(adapter);
                         dialog.dismiss();
                     } catch (Exception e) {
                         System.out.print(e.toString());
@@ -342,7 +357,89 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
 
             }
         }
+    }//
+
+    public class SolicitaDados extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            return Conexao.postDados(urls[0],parametros);
+            //} catch (IOException e) {
+            //    return "Unable to download the requested page.";
+            //}
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String resultado) {
+
+            if(resultado.contains("Erro Conexao:")){
+                dialog.dismiss();
+                Toast.makeText(ActivityBuscaEspecialidade.this,"Erro no retorno: " + resultado, Toast.LENGTH_LONG).show();
+            }
+            else {
+                if (!resultado.isEmpty()) {
+
+                    estabelecimentos = new ArrayList<Estabelecimento>();
+                    try {
+                        JSONObject jsonObject = new JSONObject(resultado);
+                        JSONArray jsonArray = jsonObject.getJSONArray("RankingGeral");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("idUnidade"));
+                            String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
+                            String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
+                            String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
+                            String temAtendimentoUrgencia = jsonArray.getJSONObject(i).getString("temAtendimentoUrgencia");
+                            String temAtendimentoAmbulatorial = jsonArray.getJSONObject(i).getString("temAtendimentoAmbulatorial");
+                            String temCentroCirurgico = jsonArray.getJSONObject(i).getString("temCentroCirurgico");
+                            String temObstetra = jsonArray.getJSONObject(i).getString("temObstetra");
+                            String temNeoNatal = jsonArray.getJSONObject(i).getString("temNeoNatal");
+                            String temDialise = jsonArray.getJSONObject(i).getString("temDialise");
+                            String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
+                            String numero = jsonArray.getJSONObject(i).getString("numero").toString();
+                            String bairro = jsonArray.getJSONObject(i).getString("bairro");
+                            String cidade = jsonArray.getJSONObject(i).getString("cidade");
+                            String nuCep = jsonArray.getJSONObject(i).getString("nuCep");
+                            String estado = jsonArray.getJSONObject(i).getString("estado_siglaEstado");
+                            String nuTelefone = jsonArray.getJSONObject(i).getString("nuTelefone");
+                            String turnoAtendimento = jsonArray.getJSONObject(i).getString("nmTurnoAtendimentocol");
+                            String latitude = jsonArray.getJSONObject(i).getString("lat");
+                            String longitude = jsonArray.getJSONObject(i).getString("long");
+                            Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
+                            Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
+                            Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
+                            Double mediaEquipamentos = jsonArray.getJSONObject(i).getDouble("mediaEquipamentos");
+                            Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
+                            Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
+
+                            Estabelecimento e = new Estabelecimento(id, nome, tipoEstabelecimento, vinculoSus, temAtendimentoUrgencia, temAtendimentoAmbulatorial,
+                                    temCentroCirurgico, temObstetra, temNeoNatal, temDialise, logradouro, numero, bairro, cidade, nuCep, estado, nuTelefone,
+                                    turnoAtendimento, latitude, longitude);
+                            e.setMdGeral(mediaGeral);
+                            e.setMdAtendimento(mediaAtendimento);
+                            e.setMdEstrutura(mediaEstrutura);
+                            e.setMdEquipamentos(mediaEquipamentos);
+                            e.setMdLocalizacao(mediaLocalizacao);
+                            e.setMdTempoAtendimento(mediaTempoAtendimento);
+                            e.setPosicaoRank(i+1);
+                            estabelecimentos.add(e);
+                        }
+
+                        EstabelecimentoRankAdapter adapter = new EstabelecimentoRankAdapter(ActivityBuscaEspecialidade.this,estabelecimentos);
+                        rvBuscaEspecialidade.setAdapter(adapter);
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        dialog.dismiss();
+                    }
+                } else {
+                    dialog.dismiss();
+                    Toast.makeText(ActivityBuscaEspecialidade.this, "Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }//SolicitaDados
+
     public boolean isLoggedInFacebook() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;

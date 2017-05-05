@@ -1,10 +1,15 @@
 package com.example.mauricioecamila.centrosdesaude.Adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.TextView;
 
 import com.example.mauricioecamila.centrosdesaude.Especialidade;
+import com.example.mauricioecamila.centrosdesaude.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +34,29 @@ public class EspecialidadeAdapter extends ArrayAdapter<Especialidade> {
         return nameFilter;
     }
 
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = convertView;
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.linha_especialidade_auto_complete, parent, false);
+        }
+        Especialidade especialidade = items.get(position);
+        if (especialidade != null) {
+            TextView lblName = (TextView) view.findViewById(R.id.lbl_name);
+            if (lblName != null)
+                lblName.setText(especialidade.getNome());
+        }
+        return view;
+    }
+
     /**
      * Custom Filter implementation for custom suggestions we provide.
      */
     Filter nameFilter = new Filter() {
         @Override
         public CharSequence convertResultToString(Object resultValue) {
-            String str = ((String) resultValue);
+            String str = ((Especialidade) resultValue).getNome();
             return str;
         }
 

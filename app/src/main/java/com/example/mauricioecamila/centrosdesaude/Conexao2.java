@@ -58,7 +58,6 @@ public class Conexao2 {
 
         //Request que obterá a resposta
         Request request = builder.build();
-
         try{
             Response response = client.newCall(request).execute();
             return response.body().toString();
