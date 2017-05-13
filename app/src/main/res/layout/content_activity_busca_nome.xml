@@ -89,9 +89,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/linear3">
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/listViewBuscaNome"/>
-        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvBuscaNome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 </LinearLayout>

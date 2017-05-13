@@ -67,6 +67,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
     private String[] estados = new String[]{"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT",
             "MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"};
     private ArrayList<Especialidade> especialidades;
+    private ArrayList<String> municipios;
 
     private Especialidade especSelecionadaAutoCompleteTextView;
 
@@ -167,7 +168,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 //TODO Busca da especialidade
-                int idUnidade = especSelecionadaAutoCompleteTextView.getId();
+                /*int idUnidade = especSelecionadaAutoCompleteTextView.getId();
                 String estado = spinEstado.getSelectedItem().toString();
                 String municipio = "";
                 url = "http://centrosdesaude.com.br/app/buscaEspecialidades.php";
@@ -176,7 +177,14 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                 new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
 
                 System.out.println("nome da espec: " + especSelecionadaAutoCompleteTextView.getNome());
-                System.out.println("id da espec: " + especSelecionadaAutoCompleteTextView.getId());
+                System.out.println("id da espec: " + especSelecionadaAutoCompleteTextView.getId());*/
+                dialog = new ProgressDialog(ActivityBuscaEspecialidade.this);
+                dialog.setCancelable(true);
+                dialog.setMessage("");
+                dialog.show();
+                url = "https://gist.githubusercontent.com/letanure/3012978/raw/36fc21d9e2fc45c078e0e0e07cce3c81965db8f9/estados-cidades.json";
+                parametros="";
+                new ActivityBuscaEspecialidade.CarregaMunicipios().execute(url);
 
             }
         });
@@ -350,7 +358,6 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                 //Executa para o spinner município
                 try {
                     JSONObject jsonObject = new JSONObject(resultado);
-                    System.out.println("----json: " + jsonObject.getJSONArray("cidades"));
                 }catch (JSONException e){
                     Toast.makeText(getApplicationContext(), "ERRO: " + e.toString(), Toast.LENGTH_LONG).show();
                 }
@@ -390,12 +397,6 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                             String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
                             String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
                             String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
-                            String temAtendimentoUrgencia = jsonArray.getJSONObject(i).getString("temAtendimentoUrgencia");
-                            String temAtendimentoAmbulatorial = jsonArray.getJSONObject(i).getString("temAtendimentoAmbulatorial");
-                            String temCentroCirurgico = jsonArray.getJSONObject(i).getString("temCentroCirurgico");
-                            String temObstetra = jsonArray.getJSONObject(i).getString("temObstetra");
-                            String temNeoNatal = jsonArray.getJSONObject(i).getString("temNeoNatal");
-                            String temDialise = jsonArray.getJSONObject(i).getString("temDialise");
                             String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
                             String numero = jsonArray.getJSONObject(i).getString("numero").toString();
                             String bairro = jsonArray.getJSONObject(i).getString("bairro");
@@ -413,17 +414,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                             Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
                             Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
 
-                            Estabelecimento e = new Estabelecimento(id, nome, tipoEstabelecimento, vinculoSus, temAtendimentoUrgencia, temAtendimentoAmbulatorial,
-                                    temCentroCirurgico, temObstetra, temNeoNatal, temDialise, logradouro, numero, bairro, cidade, nuCep, estado, nuTelefone,
-                                    turnoAtendimento, latitude, longitude);
-                            e.setMdGeral(mediaGeral);
-                            e.setMdAtendimento(mediaAtendimento);
-                            e.setMdEstrutura(mediaEstrutura);
-                            e.setMdEquipamentos(mediaEquipamentos);
-                            e.setMdLocalizacao(mediaLocalizacao);
-                            e.setMdTempoAtendimento(mediaTempoAtendimento);
-                            e.setPosicaoRank(i+1);
-                            estabelecimentos.add(e);
+
                         }
 
                         EstabelecimentoRankAdapter adapter = new EstabelecimentoRankAdapter(ActivityBuscaEspecialidade.this,estabelecimentos);
@@ -439,6 +430,58 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
             }
         }
     }//SolicitaDados
+
+    public class CarregaMunicipios extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            return Conexao.postDados(urls[0],parametros);
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String resultado) {
+            if(resultado.contains("Erro Conexao:")){
+                if(dialog != null)
+                    dialog.dismiss();
+                System.out.println("Erro Conexao: " + resultado);
+                Toast.makeText(getApplicationContext(),"Erro no retorno " + resultado, Toast.LENGTH_LONG).show();
+            }
+            else if(resultado.contains("sigla")) {
+                if (!resultado.isEmpty()) {
+                    municipios = new ArrayList<String>();
+                    try {
+                        JSONObject jsonObject = new JSONObject(resultado);
+                        JSONArray jsonArray = jsonObject.getJSONArray("estados");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String estado = jsonArray.getJSONObject(i).getString("nome");
+                            if(estado == spinEstado.getSelectedItem().toString()){
+                                System.out.println("CIDADES: " + jsonArray.getJSONObject(i).getString("cidades"));
+                            }
+                            int id = Integer.parseInt(jsonArray.getJSONObject(i).getString("id"));
+                            String nome = jsonArray.getJSONObject(i).getString("nome");
+                            Especialidade esp = new Especialidade(id,nome);
+                            especialidades.add(esp);
+                        }
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        System.out.print(e.toString());
+                        dialog.dismiss();
+                    }
+                } else {
+                    dialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
+                }
+            }else{
+                //Executa para o spinner município
+                try {
+                    JSONObject jsonObject = new JSONObject(resultado);
+                }catch (JSONException e){
+                    Toast.makeText(getApplicationContext(), "ERRO: " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
+    }//Carrega Municipios
 
     public boolean isLoggedInFacebook() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();

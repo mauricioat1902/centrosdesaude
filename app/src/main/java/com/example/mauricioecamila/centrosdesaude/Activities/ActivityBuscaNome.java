@@ -19,6 +19,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,16 +29,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.UnidadeAdapterRV;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.example.mauricioecamila.centrosdesaude.Unidade;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
@@ -51,8 +53,8 @@ public class ActivityBuscaNome extends AppCompatActivity
 
     private Button botaoBusca;
     private EditText editText;
-    private ListView listView;
-    private ArrayList<Estabelecimento> estabelecimentos;
+    private RecyclerView rvBuscaNome;
+    private ArrayList<Unidade> unidades;
     private Estabelecimento estabelecimento;
     private String[] estados = new String[]{"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT",
             "MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"};
@@ -93,6 +95,11 @@ public class ActivityBuscaNome extends AppCompatActivity
 
         botaoBusca = (Button) findViewById(R.id.botaoBusca);
         editText = (EditText) findViewById(R.id.editText1);
+
+        rvBuscaNome = (RecyclerView) findViewById(R.id.rvBuscaNome);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rvBuscaNome.setLayoutManager(layoutManager);
 
         manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         Boolean estaOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
@@ -260,11 +267,7 @@ public class ActivityBuscaNome extends AppCompatActivity
         @Override
         protected String doInBackground(String... urls) {
 
-            // params comes from the execute() call: params[0] is the url.
             return Conexao.postDados(urls[0],parametros);
-            //} catch (IOException e) {
-            //    return "Unable to download the requested page.";
-            //}
         }
 
         // onPostExecute displays the results of the AsyncTask.
@@ -277,32 +280,23 @@ public class ActivityBuscaNome extends AppCompatActivity
             }
             else {
                 if (!resultado.isEmpty()) {
-                    listView = (ListView) findViewById(R.id.listViewBuscaNome);
-                    estabelecimentos = new ArrayList<Estabelecimento>();
+                    unidades = new ArrayList<Unidade>();
                     try {
                         JSONObject jsonObject = new JSONObject(resultado);
-                        JSONArray jsonArray = jsonObject.getJSONArray("estabelecimentos");
+                        JSONArray jsonArray = jsonObject.getJSONArray("unidades");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("idUnidade"));
-                            String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
-                            String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
+                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("id"));
+                            String nome = jsonArray.getJSONObject(i).getString("nomeFantasia");
                             String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
-                            String temAtendimentoUrgencia = jsonArray.getJSONObject(i).getString("temAtendimentoUrgencia");
-                            String temAtendimentoAmbulatorial = jsonArray.getJSONObject(i).getString("temAtendimentoAmbulatorial");
-                            String temCentroCirurgico = jsonArray.getJSONObject(i).getString("temCentroCirurgico");
-                            String temObstetra = jsonArray.getJSONObject(i).getString("temObstetra");
-                            String temNeoNatal = jsonArray.getJSONObject(i).getString("temNeoNatal");
-                            String temDialise = jsonArray.getJSONObject(i).getString("temDialise");
                             String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
-                            String numero = jsonArray.getJSONObject(i).getString("numero").toString();
+                            int numero = Integer.parseInt(jsonArray.getJSONObject(i).getString("numero").toString());
                             String bairro = jsonArray.getJSONObject(i).getString("bairro");
-                            String cidade = jsonArray.getJSONObject(i).getString("cidade");
-                            String nuCep = jsonArray.getJSONObject(i).getString("nuCep");
-                            String estado = jsonArray.getJSONObject(i).getString("estado_siglaEstado");
-                            String nuTelefone = jsonArray.getJSONObject(i).getString("nuTelefone");
-                            String turnoAtendimento = jsonArray.getJSONObject(i).getString("nmTurnoAtendimentocol");
+                            String municipio = jsonArray.getJSONObject(i).getString("municipio");
+                            long cep = Long.parseLong(jsonArray.getJSONObject(i).getString("cep"));
+                            String estado = jsonArray.getJSONObject(i).getString("estado_sigla");
                             String latitude = jsonArray.getJSONObject(i).getString("lat");
                             String longitude = jsonArray.getJSONObject(i).getString("long");
+                            String tipoUnidade = jsonArray.getJSONObject(i).getString("tipoUnidade");
                             Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
                             Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
                             Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
@@ -311,22 +305,13 @@ public class ActivityBuscaNome extends AppCompatActivity
                             Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
                             Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
 
-                            Estabelecimento e = new Estabelecimento(id, nome, tipoEstabelecimento, vinculoSus, temAtendimentoUrgencia, temAtendimentoAmbulatorial,
-                                    temCentroCirurgico, temObstetra, temNeoNatal, temDialise, logradouro, numero, bairro, cidade, nuCep, estado, nuTelefone,
-                                    turnoAtendimento, latitude, longitude);
-                            e.setDistancia(distancia);
-                            e.setMdGeral(mediaGeral);
-                            e.setMdAtendimento(mediaAtendimento);
-                            e.setMdEstrutura(mediaEstrutura);
-                            e.setMdEquipamentos(mediaEquipamentos);
-                            e.setMdLocalizacao(mediaLocalizacao);
-                            e.setMdTempoAtendimento(mediaTempoAtendimento);
+                            Unidade un = new Unidade(id, nome, logradouro, numero, bairro, municipio, cep, estado, latitude, longitude,
+                                    distancia, mediaAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral, tipoUnidade);
 
-                            estabelecimentos.add(e);
+                            unidades.add(un);
+                            UnidadeAdapterRV adapterRV = new UnidadeAdapterRV(ActivityBuscaNome.this,unidades);
+                            rvBuscaNome.setAdapter(adapterRV);
                         }
-
-                        ArrayAdapter adaptador = new EstabelecimentoAdapter(ActivityBuscaNome.this, estabelecimentos);
-                        listView.setAdapter(adaptador);
                         dialog.dismiss();
                     } catch (Exception e) {
                         dialog.dismiss();
