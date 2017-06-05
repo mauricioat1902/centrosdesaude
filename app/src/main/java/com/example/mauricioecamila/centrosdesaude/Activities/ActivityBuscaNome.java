@@ -285,17 +285,23 @@ public class ActivityBuscaNome extends AppCompatActivity
                         JSONObject jsonObject = new JSONObject(resultado);
                         JSONArray jsonArray = jsonObject.getJSONArray("unidades");
                         for (int i = 0; i < jsonArray.length(); i++) {
+                            System.out.println("--INICIO--");
                             long id = Long.parseLong(jsonArray.getJSONObject(i).getString("id"));
+                            System.out.println("--ID-- " + id);
                             String nome = jsonArray.getJSONObject(i).getString("nomeFantasia");
-                            String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
+                            //String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
                             String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
-                            int numero = Integer.parseInt(jsonArray.getJSONObject(i).getString("numero").toString());
+                            String numero;
+                            if(!jsonArray.getJSONObject(i).getString("numero").toString().isEmpty())
+                                numero = jsonArray.getJSONObject(i).getString("numero").toString();
+                            else
+                                numero = "0";
                             String bairro = jsonArray.getJSONObject(i).getString("bairro");
                             String municipio = jsonArray.getJSONObject(i).getString("municipio");
                             long cep = Long.parseLong(jsonArray.getJSONObject(i).getString("cep"));
                             String estado = jsonArray.getJSONObject(i).getString("estado_sigla");
-                            String latitude = jsonArray.getJSONObject(i).getString("lat");
-                            String longitude = jsonArray.getJSONObject(i).getString("long");
+                            String latitude = jsonArray.getJSONObject(i).getString("latitude");
+                            String longitude = jsonArray.getJSONObject(i).getString("longitude");
                             String tipoUnidade = jsonArray.getJSONObject(i).getString("tipoUnidade");
                             Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
                             Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
@@ -305,17 +311,20 @@ public class ActivityBuscaNome extends AppCompatActivity
                             Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
                             Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
 
+                            System.out.println("--VAI CRIAR UNIDADE--");
                             Unidade un = new Unidade(id, nome, logradouro, numero, bairro, municipio, cep, estado, latitude, longitude,
                                     distancia, mediaAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral, tipoUnidade);
 
                             unidades.add(un);
-                            UnidadeAdapterRV adapterRV = new UnidadeAdapterRV(ActivityBuscaNome.this,unidades);
-                            rvBuscaNome.setAdapter(adapterRV);
+                            System.out.println("--FIM--");
                         }
+                        System.out.println("--UnidadeAdapterRV--");
+                        UnidadeAdapterRV adapterRV = new UnidadeAdapterRV(ActivityBuscaNome.this,unidades);
+                        rvBuscaNome.setAdapter(adapterRV);
                         dialog.dismiss();
                     } catch (Exception e) {
                         dialog.dismiss();
-                        System.out.print(e.toString());
+                        System.out.print("ERRO: " + e.toString());
                     }
                 } else {
                     dialog.dismiss();

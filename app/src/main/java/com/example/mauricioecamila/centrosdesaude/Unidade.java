@@ -4,7 +4,7 @@ public class Unidade {
     private long id;
     private String nome;
     private String logradouro;
-    private int numero;
+    private String numero;
     private String bairro;
     private String municipio;
     private long cep;
@@ -16,7 +16,7 @@ public class Unidade {
     private String vinculoSus;
     private String tipoUnidade;
 
-    public Unidade(long id, String nome, String logradouro, int numero, String latitude, String longitude) {
+    public Unidade(long id, String nome, String logradouro, String numero, String latitude, String longitude) {
         this.id = id;
         this.nome = nome;
         this.logradouro = logradouro;
@@ -28,7 +28,7 @@ public class Unidade {
     public Unidade (){
     }
 
-    public Unidade(long id, String nome, String logradouro, int numero, String bairro, String municipio, long cep, String estado, String latitude, String longitude, Double distancia, Double mdAtendimento, Double mdEstrutura, Double mdEquipamentos, Double mdLocalizacao, Double mdTempoAtendimento, Double mdGeral, String tipoUnidade) {
+    public Unidade(long id, String nome, String logradouro, String numero, String bairro, String municipio, long cep, String estado, String latitude, String longitude, Double distancia, Double mdAtendimento, Double mdEstrutura, Double mdEquipamentos, Double mdLocalizacao, Double mdTempoAtendimento, Double mdGeral, String tipoUnidade) {
         this.id = id;
         this.nome = nome;
         this.logradouro = logradouro;
@@ -73,11 +73,11 @@ public class Unidade {
         this.logradouro = logradouro;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 

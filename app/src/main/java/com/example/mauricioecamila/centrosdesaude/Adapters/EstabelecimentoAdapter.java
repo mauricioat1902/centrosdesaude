@@ -37,8 +37,8 @@ public class EstabelecimentoAdapter extends ArrayAdapter<Estabelecimento> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.linha, parent, false);
-        TextView nomeEstabelecimento = (TextView) rowView.findViewById(R.id.nomeEstabelecimento);
-        TextView endereco = (TextView) rowView.findViewById(R.id.enderecoEstabelecimento);
+        TextView nomeEstabelecimento = (TextView) rowView.findViewById(R.id.nomeUnidade);
+        TextView endereco = (TextView) rowView.findViewById(R.id.nomeUnidade);
         TextView tvDistancia = (TextView)rowView.findViewById(R.id.tvDistancia);
         Button btnMap = (Button)rowView.findViewById(R.id.btnMap);
         RatingBar rbAvGeral = (RatingBar)rowView.findViewById(R.id.rbAvGeral);
@@ -72,7 +72,7 @@ public class EstabelecimentoAdapter extends ArrayAdapter<Estabelecimento> {
         llLinhaEst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento");
+                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityUnidade");
                 Bundle parametros = new Bundle();
                 parametros.putLong("id",elementos.get(position).getId());
                 parametros.putString("nome",elementos.get(position).getNome());

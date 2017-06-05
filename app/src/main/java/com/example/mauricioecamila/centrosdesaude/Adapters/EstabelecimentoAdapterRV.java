@@ -52,7 +52,7 @@ public class EstabelecimentoAdapterRV extends RecyclerView.Adapter<Estabelecimen
         myViewHolder.llLinhaEst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento");
+                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityUnidade");
                 Bundle parametros = new Bundle();
                 parametros.putLong("id",estabelecimentos.get(position).getId());
                 parametros.putString("nome",estabelecimentos.get(position).getNome());
@@ -132,8 +132,8 @@ public class EstabelecimentoAdapterRV extends RecyclerView.Adapter<Estabelecimen
         public MyViewHolder(View itemView){
             super(itemView);
 
-            nomeEstabelecimento = (TextView) itemView.findViewById(R.id.nomeEstabelecimento);
-            endereco = (TextView) itemView.findViewById(R.id.enderecoEstabelecimento);
+            nomeEstabelecimento = (TextView) itemView.findViewById(R.id.nomeUnidade);
+            endereco = (TextView) itemView.findViewById(R.id.enderecoUnidade);
             tvDistancia = (TextView) itemView.findViewById(R.id.tvDistancia);
             btnMap = (Button) itemView.findViewById(R.id.btnMap);
             rbAvGeral = (RatingBar) itemView.findViewById(R.id.rbAvGeral);

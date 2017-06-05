@@ -43,15 +43,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ActivityEstabelecimento extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ActivityUnidade extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    private long idEstabelecimento;
+    private long idUnidade;
     private String nome;
-    private String tipoEstabelecimento;
-    private String vinculoSus, temAtendimentoUrgencia, temAtendimentoAmbulatorial, temCentroCirurgico, temObstetra, temNeoNatal, temDialise;
+    private String tipoUnidade;
     private String logradouro;
     private String numero;
-    private String bairro, cidade, nuCep, estado;
+    private String bairro, municipio, nuCep, estado;
     private String telefone;
     private String turnoAtendimento;
     private String latitude, longitude;
@@ -65,8 +64,8 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
     private AlertDialog dialogAv;
 
 
-    private TextView tvNomeEstabelecimento, tvEndereco, tvTelefone, tvTpEstabelecimento, tvAtendUrgencia, tvAtendAmbulatorial,
-            tvCentroCirurgico, tvObstetra, tvNeoNatal, tvDialise, tvturnoAtendimento;
+    private TextView tvNomeUnidade, tvEndereco,tvTipoUnidade, tvBairro, tvMunicipio, tvCep, tvEstado;
+
 
     private String url = "";
     private String parametros = "";
@@ -98,27 +97,19 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvComentarios.setLayoutManager(layoutManager);
-
+        etComentario = (EditText) findViewById(R.id.etComentario);
 
         if(params!=null) {
-            idEstabelecimento = params.getLong("id");
+            idUnidade = params.getLong("id");
             nome = params.getString("nome");
-            tipoEstabelecimento = params.getString("tipoEstabelecimento");
-            vinculoSus = params.getString("vinculoSus");
-            temAtendimentoUrgencia = params.getString("temAtendimentoUrgencia");
-            temAtendimentoAmbulatorial = params.getString("temAtendimentoAmbulatorial");
-            temCentroCirurgico = params.getString("temCentroCirurgico");
-            temObstetra = params.getString("temObstetra");
-            temNeoNatal = params.getString("temNeoNatal");
-            temDialise = params.getString("temDialise");
+            tipoUnidade = params.getString("tipoUnidade");
+            //vinculoSus = params.getString("vinculoSus");
             logradouro = params.getString("logradouro");
             numero = params.getString("numero");
             bairro = params.getString("bairro");
-            cidade = params.getString("cidade");
+            municipio = params.getString("municipio");
             nuCep = params.getString("cep");
             estado = params.getString("estado");
-            telefone = params.getString("telefone");
-            turnoAtendimento = params.getString("turnoAtendimento");
             latitude = params.getString("latitude");
             longitude = params.getString("longitude");
             distancia = params.getDouble("distancia");
@@ -129,30 +120,22 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
             mediaTempoAtendimento = params.getDouble("mediaTempoAtendimento");
             mediaGeral = params.getDouble("mediaGeral");
         }
-        tvNomeEstabelecimento = (TextView)findViewById(R.id.tvNomeEstabelecimento);
+        tvNomeUnidade = (TextView)findViewById(R.id.tvNomeUnidade);
         tvEndereco = (TextView)findViewById(R.id.tvEndereco);
-        tvTelefone = (TextView)findViewById(R.id.tvTelefone);
-        tvTpEstabelecimento = (TextView)findViewById(R.id.tvTpEstabelecimento);
-        tvAtendUrgencia = (TextView)findViewById(R.id.tvAtendUrgencia);
-        tvAtendAmbulatorial = (TextView)findViewById(R.id.tvAtendAmbulatorial);
-        tvCentroCirurgico = (TextView)findViewById(R.id.tvCentroCirurgico);
-        tvObstetra = (TextView)findViewById(R.id.tvObstetra);
-        tvNeoNatal = (TextView)findViewById(R.id.tvNeoNatal);
-        tvDialise = (TextView)findViewById(R.id.tvDialise);
-        tvturnoAtendimento = (TextView)findViewById(R.id.tvturnoAtendimento);
-        etComentario = (EditText)findViewById(R.id.etComentario);
+        tvTipoUnidade = (TextView)findViewById(R.id.tvTipoUnidade);
+        tvBairro = (TextView)findViewById(R.id.tvBairro);
+        tvMunicipio = (TextView)findViewById(R.id.tvMunicipio);
+        tvCep = (TextView)findViewById(R.id.tvCep);
+        tvEstado = (TextView)findViewById(R.id.tvEstado);
 
-        tvNomeEstabelecimento.setText(nome);
-        tvEndereco.setText(logradouro + ", " + numero + " " + cidade + " - " + estado);
-        tvTelefone.setText(telefone);
-        tvTpEstabelecimento.setText(tipoEstabelecimento);
-        tvAtendUrgencia.setText(temAtendimentoUrgencia);
-        tvAtendAmbulatorial.setText(temAtendimentoAmbulatorial);
-        tvCentroCirurgico.setText(temCentroCirurgico);
-        tvObstetra.setText(temObstetra);
-        tvNeoNatal.setText(temNeoNatal);
-        tvDialise.setText(temDialise);
-        tvturnoAtendimento.setText(turnoAtendimento);
+        //SET
+        tvNomeUnidade.setText(nome);
+        tvEndereco.setText(logradouro + ", " + numero);
+        tvTipoUnidade.setText(tipoUnidade);
+        tvBairro.setText(bairro);
+        tvMunicipio.setText(municipio);
+        tvCep.setText(nuCep);
+        tvEstado.setText(estado);
 
         rbAtendimento = (RatingBar)findViewById(R.id.rbAtendimento);
         rbAtendimento.setRating(Float.parseFloat(mediadAtendimento.toString()));
@@ -183,7 +166,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                 String descComentario = etComentario.getText().toString();
                 if(etComentario.getText().toString().trim().isEmpty()){
                     AlertDialog alertDialog;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityEstabelecimento.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityUnidade.this);
                     builder.setMessage("O campo comentário está vazio")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
@@ -200,9 +183,9 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                     if (networkInfo != null && networkInfo.isConnected()) {
                         //Criar a URL
                         url = "http://centrosdesaude.com.br/app/enviarComentario.php";
-                        parametros = "?idUsuario=" + idUsuario + "&idEstabelecimento=" + idEstabelecimento + "&descComentario=" + descComentario;
+                        parametros = "?idUsuario=" + idUsuario + "&idUnidade=" + idUnidade + "&descComentario=" + descComentario;
 
-                        new ActivityEstabelecimento.SolicitaDados().execute(url);
+                        new ActivityUnidade.SolicitaDados().execute(url);
 
                     } else {
                         Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
@@ -223,8 +206,8 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         if(networkInfo != null && networkInfo.isConnected()){
             //Criar a URL
             url = "http://centrosdesaude.com.br/app/retornoComentarios.php";
-            parametros2 = "?idUnidade=" + idEstabelecimento;
-            new ActivityEstabelecimento.CarregaComentarios().execute(url);
+            parametros2 = "?idUnidade=" + idUnidade;
+            new ActivityUnidade.CarregaComentarios().execute(url);
         }
         else{
             Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
@@ -237,8 +220,8 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
         View v = getLayoutInflater().inflate(R.layout.dialog_avaliacao, null);
         dialogAv.setView(v);
 
-        Button btn = (Button)findViewById(R.id.btnAvaliacao);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button btnAvaliacao = (Button)findViewById(R.id.btnAvaliacao);
+        btnAvaliacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogAv.show();
@@ -249,6 +232,21 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
     }
 
     public void btnAvOk(View view){
+        //Verificar conexão
+        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            //Criar a URL
+            url = "http://centrosdesaude.com.br/app/enviarAvaliacao.php";
+            parametros = "?idUnidade=" + idUnidade + "&rbAtendimento=" + rbAtendimento.getRating() + "&rbEquipamentos=" + rbEquipamentos.getRating()
+            + "&rbEstrutura=" + rbEstrutura.getRating() + "&rbLocalização=" +rbLocalização.getRating() + "&rbTempoAtendimento=" + rbTempoAtendimento.getRating();
+
+            new ActivityUnidade.EnviarAvaliacao().execute(url);
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Nenhuma conexão foi detectada", Toast.LENGTH_LONG).show();
+        }
+        rbAtendimento.getRating();
         dialogAv.dismiss();
     }
     public void btnAvCancel(View view){
@@ -383,7 +381,7 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
                             avaliacaos.add(avaliacao);
                         }
 
-                        ComentarioAvaliacaoAdapterRV adapter = new ComentarioAvaliacaoAdapterRV(ActivityEstabelecimento.this,avaliacaos);
+                        ComentarioAvaliacaoAdapterRV adapter = new ComentarioAvaliacaoAdapterRV(ActivityUnidade.this,avaliacaos);
                         rvComentarios.setAdapter(adapter);
 
                     }catch (Exception e){
@@ -418,6 +416,28 @@ public class ActivityEstabelecimento extends AppCompatActivity implements Naviga
             }
         }
     }//SolicitaDados
+
+    public class EnviarAvaliacao extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            // params comes from the execute() call: params[0] is the url.
+            return Conexao.postDados(urls[0],parametros);
+        }
+
+        @Override
+        protected void onPostExecute(String resultado) {
+            if(resultado.contains("Avaliação enviada com sucesso")){
+                //Reinicia activity
+                //recreate();
+                finish();
+                startActivity(getIntent());
+                Toast.makeText(getApplicationContext(),"Avaliação enviada com sucesso", Toast.LENGTH_SHORT).show();
+            }
+            else if(resultado.contains("Erro ao enviar a Avaliação")){
+                Toast.makeText(getApplicationContext(),"Ocorreu um erro ao enviar a Avaliação", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }//EnviarAvaliacao
 
 
 }

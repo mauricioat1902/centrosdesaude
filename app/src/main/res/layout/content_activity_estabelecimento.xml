@@ -7,17 +7,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento"
+    tools:context="com.example.mauricioecamila.centrosdesaude.Activities.ActivityUnidade"
     tools:showIn="@layout/app_bar_activity_estabelecimento"
     android:weightSum="1">
 
     <TextView
-        android:id="@+id/tvNomeEstabelecimento"
+        android:id="@+id/tvNomeUnidade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#206580"
         android:padding="5dp"
-        android:text="Nome do Estabelecimento"
+        android:text="Nome da Unidade"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textColor="@android:color/white" />
@@ -44,6 +44,7 @@
                 android:padding="8dp"
                 android:text="Endereço"
                 android:textColor="@android:color/black"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -52,145 +53,93 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Telefone: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvTelefone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Telefone"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tipo do Estabelecimento: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvTpEstabelecimento"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Tipo do Estabelecimento"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Atendimento Urgência: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvAtendUrgencia"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Atendimento Urgência"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Atendimento Ambulatorial: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
                 <TextView
-                    android:id="@+id/tvAtendAmbulatorial"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Atendimento Ambulatorial"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                        android:id="@+id/textView11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Centro Cirúrgico: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvCentroCirurgico"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Centro Cirúrgico"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/textView12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Obstetra: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvObstetra"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Obstetra"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/textView13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="NeoNatal: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvNeoNatal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="NeoNatal"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/textView14"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Diálise: "
-                        android:textColor="#145789"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvDialise"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Dialise"
-                        android:textColor="@android:color/black" />
-
-                <TextView
-                    android:id="@+id/textView15"
+                    android:id="@+id/textView8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Turno de Atendimento: "
+                    android:text="Tipo da Unidade: "
                     android:textColor="#145789"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
-                        android:id="@+id/tvturnoAtendimento"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Turno Atendimento"
-                        android:textColor="@android:color/black" />
+                    android:id="@+id/tvTipoUnidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo da Unidade"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bairro:"
+                    android:textColor="#145789"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvBairro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bairro"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Munícpio:"
+                    android:textColor="#145789"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvMunicipio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Município"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CEP:"
+                    android:textColor="#145789"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCep"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cep"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estado:"
+                    android:textColor="#145789"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvEstado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Estado"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

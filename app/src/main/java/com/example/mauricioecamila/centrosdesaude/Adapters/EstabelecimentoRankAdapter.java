@@ -60,7 +60,7 @@ public class EstabelecimentoRankAdapter extends RecyclerView.Adapter<Estabelecim
         myViewHolder.llLinhaRank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento");
+                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityUnidade");
                 Bundle parametros = new Bundle();
                 parametros.putLong("id",estabelecimentos.get(position).getId());
                 parametros.putString("nome",estabelecimentos.get(position).getNome());

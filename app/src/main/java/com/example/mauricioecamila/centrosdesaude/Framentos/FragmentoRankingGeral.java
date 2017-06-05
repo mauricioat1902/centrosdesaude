@@ -15,10 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoRankAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.UnidadeAdapterRV;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
-import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.example.mauricioecamila.centrosdesaude.Unidade;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +30,7 @@ public class FragmentoRankingGeral extends Fragment{
     private RecyclerView rvRankGeral;
     private String url="";
     private String parametros="";
-    private ArrayList<Estabelecimento> estabelecimentos;
+    private ArrayList<Unidade> unidades;
     private ProgressDialog dialog;
 
     @Nullable
@@ -93,57 +93,51 @@ public class FragmentoRankingGeral extends Fragment{
             }
             else {
                 if (!resultado.isEmpty()) {
+                    if(resultado.contains("Não houve retorno")){
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), "Nenhum registro foi encontrado", Toast.LENGTH_LONG).show();
+                    }else {
+                        unidades = new ArrayList<Unidade>();
+                        try {
+                            JSONObject jsonObject = new JSONObject(resultado);
+                            JSONArray jsonArray = jsonObject.getJSONArray("RankingGeral");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                long id = Long.parseLong(jsonArray.getJSONObject(i).getString("id"));
+                                String nome = jsonArray.getJSONObject(i).getString("nomeFantasia");
+                                //String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
+                                String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
+                                String numero;
+                                if(!jsonArray.getJSONObject(i).getString("numero").toString().isEmpty())
+                                    numero = jsonArray.getJSONObject(i).getString("numero").toString();
+                                else
+                                    numero = "0";
+                                String bairro = jsonArray.getJSONObject(i).getString("bairro");
+                                String municipio = jsonArray.getJSONObject(i).getString("municipio");
+                                long cep = Long.parseLong(jsonArray.getJSONObject(i).getString("cep"));
+                                String estado = jsonArray.getJSONObject(i).getString("estado_sigla");
+                                String latitude = jsonArray.getJSONObject(i).getString("latitude");
+                                String longitude = jsonArray.getJSONObject(i).getString("longitude");
+                                String tipoUnidade = jsonArray.getJSONObject(i).getString("tipoUnidade");
+                                Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
+                                Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
+                                Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
+                                Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
+                                Double mediaEquipamentos = jsonArray.getJSONObject(i).getDouble("mediaEquipamentos");
+                                Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
+                                Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
 
-                    estabelecimentos = new ArrayList<Estabelecimento>();
-                    try {
-                        JSONObject jsonObject = new JSONObject(resultado);
-                        JSONArray jsonArray = jsonObject.getJSONArray("RankingGeral");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("idUnidade"));
-                            String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
-                            String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
-                            String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
-                            String temAtendimentoUrgencia = jsonArray.getJSONObject(i).getString("temAtendimentoUrgencia");
-                            String temAtendimentoAmbulatorial = jsonArray.getJSONObject(i).getString("temAtendimentoAmbulatorial");
-                            String temCentroCirurgico = jsonArray.getJSONObject(i).getString("temCentroCirurgico");
-                            String temObstetra = jsonArray.getJSONObject(i).getString("temObstetra");
-                            String temNeoNatal = jsonArray.getJSONObject(i).getString("temNeoNatal");
-                            String temDialise = jsonArray.getJSONObject(i).getString("temDialise");
-                            String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
-                            String numero = jsonArray.getJSONObject(i).getString("numero").toString();
-                            String bairro = jsonArray.getJSONObject(i).getString("bairro");
-                            String cidade = jsonArray.getJSONObject(i).getString("cidade");
-                            String nuCep = jsonArray.getJSONObject(i).getString("nuCep");
-                            String estado = jsonArray.getJSONObject(i).getString("estado_siglaEstado");
-                            String nuTelefone = jsonArray.getJSONObject(i).getString("nuTelefone");
-                            String turnoAtendimento = jsonArray.getJSONObject(i).getString("nmTurnoAtendimentocol");
-                            String latitude = jsonArray.getJSONObject(i).getString("lat");
-                            String longitude = jsonArray.getJSONObject(i).getString("long");
-                            Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
-                            Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
-                            Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
-                            Double mediaEquipamentos = jsonArray.getJSONObject(i).getDouble("mediaEquipamentos");
-                            Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
-                            Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
-
-                            Estabelecimento e = new Estabelecimento(id, nome, tipoEstabelecimento, vinculoSus, temAtendimentoUrgencia, temAtendimentoAmbulatorial,
-                                    temCentroCirurgico, temObstetra, temNeoNatal, temDialise, logradouro, numero, bairro, cidade, nuCep, estado, nuTelefone,
-                                    turnoAtendimento, latitude, longitude);
-                            e.setMdGeral(mediaGeral);
-                            e.setMdAtendimento(mediaAtendimento);
-                            e.setMdEstrutura(mediaEstrutura);
-                            e.setMdEquipamentos(mediaEquipamentos);
-                            e.setMdLocalizacao(mediaLocalizacao);
-                            e.setMdTempoAtendimento(mediaTempoAtendimento);
-                            e.setPosicaoRank(i+1);
-                            estabelecimentos.add(e);
+                                Unidade un = new Unidade(id, nome, logradouro, numero, bairro, municipio, cep, estado, latitude, longitude,
+                                        distancia, mediaAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral, tipoUnidade);
+                                un.setPosicaoRank(i + 1);
+                                unidades.add(un);
+                            }
+                            UnidadeAdapterRV adapterRV = new UnidadeAdapterRV(getActivity(), unidades);
+                            rvRankGeral.setAdapter(adapterRV);
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            dialog.dismiss();
+                            System.out.print("ERRO: " + e.toString());
                         }
-
-                        EstabelecimentoRankAdapter adapter = new EstabelecimentoRankAdapter(getActivity(),estabelecimentos);
-                        rvRankGeral.setAdapter(adapter);
-                        dialog.dismiss();
-                    } catch (Exception e) {
-                        dialog.dismiss();
                     }
                 } else {
                     dialog.dismiss();

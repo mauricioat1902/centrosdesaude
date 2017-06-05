@@ -114,8 +114,6 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
 
         spinEstado = (Spinner) findViewById(R.id.spinEstado);
         spinCidade = (Spinner) findViewById(R.id.spinCidade);
-        especialidades = new ArrayList<Especialidade>();
-        //TODO Preencher o arraylista especialidades com os dados
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()){
@@ -168,22 +166,15 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 //TODO Busca da especialidade
-                /*int idUnidade = especSelecionadaAutoCompleteTextView.getId();
-                String estado = spinEstado.getSelectedItem().toString();
-                String municipio = "";
-                url = "http://centrosdesaude.com.br/app/buscaEspecialidades.php";
-                //url = "http://192.168.0.31:8090/rankingGeral.php";
-                parametros = "?idUnidade=" + idUnidade + "&estado=" + estado + "&municipio=" + municipio;
-                new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
 
-                System.out.println("nome da espec: " + especSelecionadaAutoCompleteTextView.getNome());
-                System.out.println("id da espec: " + especSelecionadaAutoCompleteTextView.getId());*/
                 dialog = new ProgressDialog(ActivityBuscaEspecialidade.this);
                 dialog.setCancelable(true);
-                dialog.setMessage("");
+                dialog.setMessage("Buscando");
                 dialog.show();
-                url = "https://gist.githubusercontent.com/letanure/3012978/raw/36fc21d9e2fc45c078e0e0e07cce3c81965db8f9/estados-cidades.json";
-                parametros="";
+                long especialidade_id = actvEspecialidade.getId();
+                String estado =  spinEstado.getSelectedItem().toString();
+                url = "https://www.centrosdesaude.com.br/app/buscaEspecialidade.php";
+                parametros="?especialidade_id=" + especialidade_id + "&estado="+estado;
                 new ActivityBuscaEspecialidade.CarregaMunicipios().execute(url);
 
             }
@@ -398,7 +389,11 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                             String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
                             String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
                             String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
-                            String numero = jsonArray.getJSONObject(i).getString("numero").toString();
+                            String numero;
+                            if(!jsonArray.getJSONObject(i).getString("numero").toString().isEmpty())
+                                numero = jsonArray.getJSONObject(i).getString("numero").toString();
+                            else
+                                numero = "0";
                             String bairro = jsonArray.getJSONObject(i).getString("bairro");
                             String cidade = jsonArray.getJSONObject(i).getString("cidade");
                             String nuCep = jsonArray.getJSONObject(i).getString("nuCep");

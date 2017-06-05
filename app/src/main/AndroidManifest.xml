@@ -84,13 +84,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.ActivityEstabelecimento"
-            android:label="Dados do Estabelecimento"
+            android:name=".Activities.ActivityUnidade"
+            android:label="Dados da Unidade"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
-                <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento" />
+                <action android:name="com.example.mauricioecamila.centrosdesaude.Activities.ActivityUnidade" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

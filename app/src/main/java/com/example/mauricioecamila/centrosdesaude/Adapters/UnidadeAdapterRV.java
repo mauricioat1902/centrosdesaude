@@ -51,17 +51,17 @@ public class UnidadeAdapterRV extends RecyclerView.Adapter<UnidadeAdapterRV.MyVi
         myViewHolder.llLinhaEst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityEstabelecimento");
+                Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityUnidade");
                 Bundle parametros = new Bundle();
                 parametros.putLong("id",unidades.get(position).getId());
                 parametros.putString("nome",unidades.get(position).getNome());
                 parametros.putString("tipoUnidade", unidades.get(position).getTipoUnidade());
-                parametros.putString("vinculoSus", unidades.get(position).getVinculoSus());
+                //parametros.putString("vinculoSus", unidades.get(position).getVinculoSus());
 
                 parametros.putString("logradouro", unidades.get(position).getLogradouro());
-                parametros.putInt("numero", unidades.get(position).getNumero());
+                parametros.putString("numero", unidades.get(position).getNumero());
                 parametros.putString("bairro", unidades.get(position).getBairro());
-                parametros.putString("cidade", unidades.get(position).getMunicipio());
+                parametros.putString("municipio", unidades.get(position).getMunicipio());
                 parametros.putLong("cep", unidades.get(position).getCep());
                 parametros.putString("estado", unidades.get(position).getEstado());
 
