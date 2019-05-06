@@ -49,6 +49,26 @@ public class Unidade {
         this.tipoUnidade = tipoUnidade;
     }
 
+    public Unidade(long id, String nome, String logradouro, String numero, String bairro, String municipio, long cep, String estado, String latitude, String longitude, Double mdAtendimento, Double mdEstrutura, Double mdEquipamentos, Double mdLocalizacao, Double mdTempoAtendimento, Double mdGeral, String tipoUnidade) {
+        this.id = id;
+        this.nome = nome;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.bairro = bairro;
+        this.municipio = municipio;
+        this.cep = cep;
+        this.estado = estado;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.mdAtendimento = mdAtendimento;
+        this.mdEstrutura = mdEstrutura;
+        this.mdEquipamentos = mdEquipamentos;
+        this.mdLocalizacao = mdLocalizacao;
+        this.mdTempoAtendimento = mdTempoAtendimento;
+        this.mdGeral = mdGeral;
+        this.tipoUnidade = tipoUnidade;
+    }
+
     public long getId() {
         return id;
     }

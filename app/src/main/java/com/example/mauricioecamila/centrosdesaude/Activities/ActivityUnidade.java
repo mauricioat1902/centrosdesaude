@@ -112,7 +112,7 @@ public class ActivityUnidade extends AppCompatActivity implements NavigationView
             estado = params.getString("estado");
             latitude = params.getString("latitude");
             longitude = params.getString("longitude");
-            distancia = params.getDouble("distancia");
+            //distancia = params.getDouble("distancia");
             mediadAtendimento = params.getDouble("mediaAtendimento");
             mediaEstrutura = params.getDouble("mediaEstrutura");
             mediaEquipamentos = params.getDouble("mediaEquipamentos");
@@ -183,7 +183,7 @@ public class ActivityUnidade extends AppCompatActivity implements NavigationView
                     if (networkInfo != null && networkInfo.isConnected()) {
                         //Criar a URL
                         url = "http://centrosdesaude.com.br/app/enviarComentario.php";
-                        parametros = "?idUsuario=" + idUsuario + "&idUnidade=" + idUnidade + "&descComentario=" + descComentario;
+                        parametros = "?usuario_id=" + idUsuario + "&unidade_id=" + idUnidade + "&descComentario=" + descComentario;
 
                         new ActivityUnidade.SolicitaDados().execute(url);
 
@@ -360,20 +360,20 @@ public class ActivityUnidade extends AppCompatActivity implements NavigationView
                         JSONObject jsonObject = new JSONObject(resultado);
                         JSONArray jsonArray = jsonObject.getJSONArray("comentarios");
                         for (int i=0;i<jsonArray.length();i++){
-                            int idComentario = jsonArray.getJSONObject(i).getInt("idComentario");;
-                            int idUsuario = jsonArray.getJSONObject(i).getInt("idUsuario");
+                            int id = jsonArray.getJSONObject(i).getInt("id");;
+                            int usuario_id = jsonArray.getJSONObject(i).getInt("usuario_id");
                             String nome  = jsonArray.getJSONObject(i).getString("nome");
                             String sobrenome  = jsonArray.getJSONObject(i).getString("sobrenome");
                             String data  = jsonArray.getJSONObject(i).getString("data");
                             String descComentario  = jsonArray.getJSONObject(i).getString("descComentario");
-                            Long estabelecimento_idUnidade  = jsonArray.getJSONObject(i).getLong("estabelecimento_idUnidade");
+                            Long unidade_id  = jsonArray.getJSONObject(i).getLong("unidade_id");
                             Double avAtendimento = jsonArray.getJSONObject(i).getDouble("avAtendimento");
                             Double avEstrutura = jsonArray.getJSONObject(i).getDouble("avEstrutura");
                             Double avEquipamentos = jsonArray.getJSONObject(i).getDouble("avEquipamentos");
                             Double avLocalizacao = jsonArray.getJSONObject(i).getDouble("avLocalizacao");
                             Double avTempoAtendimento = jsonArray.getJSONObject(i).getDouble("avTempoAtendimento");
 
-                            Avaliacao avaliacao = new Avaliacao(idComentario,estabelecimento_idUnidade,nome + " " + sobrenome,
+                            Avaliacao avaliacao = new Avaliacao(id,unidade_id,nome + " " + sobrenome,
                                     avAtendimento, avEstrutura, avEquipamentos, avLocalizacao, avTempoAtendimento, descComentario);
 
                             Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data);

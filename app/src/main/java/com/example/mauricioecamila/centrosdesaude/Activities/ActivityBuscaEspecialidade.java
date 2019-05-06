@@ -34,13 +34,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mauricioecamila.centrosdesaude.Adapters.EspecialidadeAdapter;
-import com.example.mauricioecamila.centrosdesaude.Adapters.EstabelecimentoRankAdapter;
+import com.example.mauricioecamila.centrosdesaude.Adapters.UnidadeAdapterRV;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.Conexao3;
 import com.example.mauricioecamila.centrosdesaude.Especialidade;
-import com.example.mauricioecamila.centrosdesaude.Estabelecimento;
 import com.example.mauricioecamila.centrosdesaude.GPSTracker;
 import com.example.mauricioecamila.centrosdesaude.R;
+import com.example.mauricioecamila.centrosdesaude.Unidade;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
@@ -59,7 +59,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
     private double longitude = 0;
     private ProgressDialog dialog = null;
     private Button btnBuscarEspec;
-    private ArrayList<Estabelecimento> estabelecimentos;
+    private ArrayList<Unidade> unidades;
     private RecyclerView rvBuscaEspecialidade;
     private GPSTracker gps;
     private Spinner spinEstado, spinCidade;
@@ -171,11 +171,11 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                 dialog.setCancelable(true);
                 dialog.setMessage("Buscando");
                 dialog.show();
-                long especialidade_id = actvEspecialidade.getId();
+                long especialidade_id = especSelecionadaAutoCompleteTextView.getId();
                 String estado =  spinEstado.getSelectedItem().toString();
                 url = "https://www.centrosdesaude.com.br/app/buscaEspecialidade.php";
                 parametros="?especialidade_id=" + especialidade_id + "&estado="+estado;
-                new ActivityBuscaEspecialidade.CarregaMunicipios().execute(url);
+                new ActivityBuscaEspecialidade.SolicitaDados().execute(url);
 
             }
         });
@@ -362,7 +362,7 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
         protected String doInBackground(String... urls) {
 
             // params comes from the execute() call: params[0] is the url.
-            return Conexao.postDados(urls[0],parametros);
+            return Conexao3.postDados(urls[0],parametros);
             //} catch (IOException e) {
             //    return "Unable to download the requested page.";
             //}
@@ -379,15 +379,14 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
             else {
                 if (!resultado.isEmpty()) {
 
-                    estabelecimentos = new ArrayList<Estabelecimento>();
+                    unidades = new ArrayList<Unidade>();
                     try {
                         JSONObject jsonObject = new JSONObject(resultado);
-                        JSONArray jsonArray = jsonObject.getJSONArray("RankingGeral");
+                        JSONArray jsonArray = jsonObject.getJSONArray("unidades");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("idUnidade"));
-                            String nome = jsonArray.getJSONObject(i).getString("nmFantasia");
-                            String tipoEstabelecimento = jsonArray.getJSONObject(i).getString("nmTipoEstabelecimento");
-                            String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
+                            long id = Long.parseLong(jsonArray.getJSONObject(i).getString("id"));
+                            String nome = jsonArray.getJSONObject(i).getString("nomeFantasia");
+                            //String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
                             String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
                             String numero;
                             if(!jsonArray.getJSONObject(i).getString("numero").toString().isEmpty())
@@ -395,13 +394,12 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                             else
                                 numero = "0";
                             String bairro = jsonArray.getJSONObject(i).getString("bairro");
-                            String cidade = jsonArray.getJSONObject(i).getString("cidade");
-                            String nuCep = jsonArray.getJSONObject(i).getString("nuCep");
-                            String estado = jsonArray.getJSONObject(i).getString("estado_siglaEstado");
-                            String nuTelefone = jsonArray.getJSONObject(i).getString("nuTelefone");
-                            String turnoAtendimento = jsonArray.getJSONObject(i).getString("nmTurnoAtendimentocol");
-                            String latitude = jsonArray.getJSONObject(i).getString("lat");
-                            String longitude = jsonArray.getJSONObject(i).getString("long");
+                            String municipio = jsonArray.getJSONObject(i).getString("municipio");
+                            long cep = Long.parseLong(jsonArray.getJSONObject(i).getString("cep"));
+                            String estado = jsonArray.getJSONObject(i).getString("estado_sigla");
+                            String latitude = jsonArray.getJSONObject(i).getString("latitude");
+                            String longitude = jsonArray.getJSONObject(i).getString("longitude");
+                            String tipoUnidade = jsonArray.getJSONObject(i).getString("tipoUnidade");
                             Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
                             Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
                             Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
@@ -409,13 +407,17 @@ public class ActivityBuscaEspecialidade extends AppCompatActivity
                             Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
                             Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
 
+                            Unidade un = new Unidade(id, nome, logradouro, numero, bairro, municipio, cep, estado, latitude, longitude,
+                                    mediaAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral, tipoUnidade);
+                            unidades.add(un);
 
                         }
 
-                        EstabelecimentoRankAdapter adapter = new EstabelecimentoRankAdapter(ActivityBuscaEspecialidade.this,estabelecimentos);
-                        rvBuscaEspecialidade.setAdapter(adapter);
+                        UnidadeAdapterRV adapterRV = new UnidadeAdapterRV(ActivityBuscaEspecialidade.this, unidades);
+                        rvBuscaEspecialidade.setAdapter(adapterRV);
                         dialog.dismiss();
                     } catch (Exception e) {
+                        Toast.makeText(ActivityBuscaEspecialidade.this, "Erro: " + e.toString(), Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 } else {

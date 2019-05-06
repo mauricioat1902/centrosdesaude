@@ -285,9 +285,7 @@ public class ActivityBuscaNome extends AppCompatActivity
                         JSONObject jsonObject = new JSONObject(resultado);
                         JSONArray jsonArray = jsonObject.getJSONArray("unidades");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            System.out.println("--INICIO--");
                             long id = Long.parseLong(jsonArray.getJSONObject(i).getString("id"));
-                            System.out.println("--ID-- " + id);
                             String nome = jsonArray.getJSONObject(i).getString("nomeFantasia");
                             //String vinculoSus = jsonArray.getJSONObject(i).getString("vinculoSus");
                             String logradouro = jsonArray.getJSONObject(i).getString("logradouro");
@@ -311,14 +309,11 @@ public class ActivityBuscaNome extends AppCompatActivity
                             Double mediaLocalizacao = jsonArray.getJSONObject(i).getDouble("mediaLocalizacao");
                             Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
 
-                            System.out.println("--VAI CRIAR UNIDADE--");
                             Unidade un = new Unidade(id, nome, logradouro, numero, bairro, municipio, cep, estado, latitude, longitude,
                                     distancia, mediaAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral, tipoUnidade);
 
                             unidades.add(un);
-                            System.out.println("--FIM--");
                         }
-                        System.out.println("--UnidadeAdapterRV--");
                         UnidadeAdapterRV adapterRV = new UnidadeAdapterRV(ActivityBuscaNome.this,unidades);
                         rvBuscaNome.setAdapter(adapterRV);
                         dialog.dismiss();

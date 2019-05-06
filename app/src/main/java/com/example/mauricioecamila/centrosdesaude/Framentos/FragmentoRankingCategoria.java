@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.mauricioecamila.centrosdesaude.Adapters.UnidadeAdapterRV;
+import com.example.mauricioecamila.centrosdesaude.Adapters.UnidadeRankAdapter;
 import com.example.mauricioecamila.centrosdesaude.Conexao;
 import com.example.mauricioecamila.centrosdesaude.R;
 import com.example.mauricioecamila.centrosdesaude.Unidade;
@@ -129,7 +129,7 @@ public class FragmentoRankingCategoria extends Fragment{
                         unidades = new ArrayList<Unidade>();
                         try {
                             JSONObject jsonObject = new JSONObject(resultado);
-                            JSONArray jsonArray = jsonObject.getJSONArray("RankingGeral");
+                            JSONArray jsonArray = jsonObject.getJSONArray("rankingCategoria");
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 long id = Long.parseLong(jsonArray.getJSONObject(i).getString("id"));
                                 String nome = jsonArray.getJSONObject(i).getString("nomeFantasia");
@@ -147,7 +147,7 @@ public class FragmentoRankingCategoria extends Fragment{
                                 String latitude = jsonArray.getJSONObject(i).getString("latitude");
                                 String longitude = jsonArray.getJSONObject(i).getString("longitude");
                                 String tipoUnidade = jsonArray.getJSONObject(i).getString("tipoUnidade");
-                                Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
+                                //Double distancia = jsonArray.getJSONObject(i).getDouble("distancia");
                                 Double mediaGeral = jsonArray.getJSONObject(i).getDouble("mediaGeral");
                                 Double mediaAtendimento = jsonArray.getJSONObject(i).getDouble("mediaAtendimento");
                                 Double mediaEstrutura = jsonArray.getJSONObject(i).getDouble("mediaEstrutura");
@@ -156,12 +156,12 @@ public class FragmentoRankingCategoria extends Fragment{
                                 Double mediaTempoAtendimento = jsonArray.getJSONObject(i).getDouble("mediaTempoAtendimento");
 
                                 Unidade un = new Unidade(id, nome, logradouro, numero, bairro, municipio, cep, estado, latitude, longitude,
-                                        distancia, mediaAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral, tipoUnidade);
+                                        mediaAtendimento, mediaEstrutura, mediaEquipamentos, mediaLocalizacao, mediaTempoAtendimento, mediaGeral, tipoUnidade);
                                 un.setPosicaoRank(i + 1);
                                 unidades.add(un);
                             }
 
-                            UnidadeAdapterRV adapterRV = new UnidadeAdapterRV(getActivity(), unidades);
+                            UnidadeRankAdapter adapterRV = new UnidadeRankAdapter(getActivity(), unidades);
                             rvRankCategoria.setAdapter(adapterRV);
                             dialog.dismiss();
                         } catch (Exception e) {

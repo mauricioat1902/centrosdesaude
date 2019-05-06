@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -17,25 +18,25 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.example.mauricioecamila.centrosdesaude.R;
 import com.example.mauricioecamila.centrosdesaude.Unidade;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class UnidadeAdapterRV extends RecyclerView.Adapter<UnidadeAdapterRV.MyViewHolder> {
+public class UnidadeRankAdapter extends RecyclerView.Adapter<UnidadeRankAdapter.MyViewHolder> {
 
     private ArrayList<Unidade> unidades;
     private LayoutInflater layoutInflater;
     public final Context context;
 
-    public UnidadeAdapterRV(Context context, ArrayList<Unidade> unidades) {
+    public UnidadeRankAdapter(Context context, ArrayList<Unidade> unidades) {
         this.unidades = unidades;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
+
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v = layoutInflater.inflate(R.layout.linha, parent,false);
+        View v = layoutInflater.inflate(R.layout.linha_ranking, parent,false);
         MyViewHolder myViewHolder = new MyViewHolder(v);
         return myViewHolder;
     }
@@ -44,16 +45,19 @@ public class UnidadeAdapterRV extends RecyclerView.Adapter<UnidadeAdapterRV.MyVi
     public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
 
         myViewHolder.rbAvGeral.setRating(Float.parseFloat(unidades.get(position).getMdGeral().toString()));
-        myViewHolder.nomeUnidade.setText(unidades.get(position).getNome());
+        myViewHolder.nomeEstabelecimento.setText(unidades.get(position).getNome());
         myViewHolder.endereco.setText(unidades.get(position).getLogradouro() + ", " + unidades.get(position).getNumero());
 
-        if(unidades.get(position).getDistancia() != null){
-            myViewHolder.tvDistancia.setText(new DecimalFormat("0.0").format(unidades.get(position).getDistancia()).toString() + " Km");
-        }else{
-            myViewHolder.tvDistancia.setText(0 + " Km");
+        if(unidades.get(position).getPosicaoRank() == 1){
+            myViewHolder.imgMedalha.setImageResource(R.drawable.medalha_ouro);
+        }else if(unidades.get(position).getPosicaoRank() == 2){
+            myViewHolder.imgMedalha.setImageResource(R.drawable.medalha_prata);
+        }else if(unidades.get(position).getPosicaoRank() == 3){
+            myViewHolder.imgMedalha.setImageResource(R.drawable.medalha_bronze);
         }
 
-        myViewHolder.llLinhaEst.setOnClickListener(new View.OnClickListener() {
+
+        myViewHolder.llLinhaRank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityUnidade");
@@ -87,7 +91,7 @@ public class UnidadeAdapterRV extends RecyclerView.Adapter<UnidadeAdapterRV.MyVi
             }
         });
 
-        myViewHolder.btnMap.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.btnRankMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent("com.example.mauricioecamila.centrosdesaude.Activities.ActivityMapa");
@@ -122,21 +126,21 @@ public class UnidadeAdapterRV extends RecyclerView.Adapter<UnidadeAdapterRV.MyVi
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView nomeUnidade;
+        TextView nomeEstabelecimento;
         TextView endereco;
-        TextView tvDistancia;
-        Button btnMap;
+        Button btnRankMap;
         RatingBar rbAvGeral;
-        LinearLayout llLinhaEst;
+        LinearLayout llLinhaRank;
+        ImageView imgMedalha;
         public MyViewHolder(View itemView){
             super(itemView);
 
-            nomeUnidade = (TextView) itemView.findViewById(R.id.nomeUnidade);
-            endereco = (TextView) itemView.findViewById(R.id.enderecoUnidade);
-            tvDistancia = (TextView) itemView.findViewById(R.id.tvDistancia);
-            btnMap = (Button) itemView.findViewById(R.id.btnMap);
+            nomeEstabelecimento = (TextView) itemView.findViewById(R.id.tvRankNomeEst);
+            endereco = (TextView) itemView.findViewById(R.id.tvRankEndereco);
+            btnRankMap = (Button) itemView.findViewById(R.id.btnRankMap);
             rbAvGeral = (RatingBar) itemView.findViewById(R.id.rbAvGeral);
-            llLinhaEst = (LinearLayout) itemView.findViewById(R.id.llLinhaEst);
+            imgMedalha = (ImageView)itemView.findViewById(R.id.imgMedalha);
+            llLinhaRank = (LinearLayout) itemView.findViewById(R.id.llLinhaRank);
         }
     }
 

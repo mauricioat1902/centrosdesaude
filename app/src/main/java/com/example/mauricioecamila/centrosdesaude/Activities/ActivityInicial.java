@@ -67,9 +67,6 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
 
             SharedPreferences preferences = getSharedPreferences("prefUsuario", Context.MODE_PRIVATE);
             int tipoUsuario = preferences.getInt("tipoUsuario", 0);
-            System.out.println("--preferences: " + preferences.getString("nomeUsuario", "sem nome"));
-            System.out.println("--preferences: " + preferences.getString("sobrenomeUsuario", "sem nome"));
-            System.out.println("--preferences: " + preferences.getString("emailUsuario", "sem nome"));
             if(tipoUsuario == 2){
                 Intent abrePrincipal = new Intent(ActivityInicial.this, ActivityPrincipal.class);
                 startActivity(abrePrincipal);

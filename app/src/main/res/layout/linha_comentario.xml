@@ -84,7 +84,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="Comentário do Usuário"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
